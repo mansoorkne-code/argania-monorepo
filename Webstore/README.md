@@ -10,9 +10,13 @@ Next.js, and Supabase.
 - `packages/ui` — shared presentational UI primitives
 - `packages/eslint-config` — shared ESLint configuration
 - `packages/typescript-config` — shared TypeScript configuration
+- `supabase` — database migrations and Supabase operational documentation
+- `packages/types` — shared domain contracts
+- `packages/validations` — Zod schemas for untrusted input
+- `packages/api` — server-side domain rules and business calculations
 
-Future shared packages (`db`, `auth`, `api`, `types`, `validations`, and
-`config`) will be added only in their respective implementation phases.
+The `db`, `auth`, and `config` packages will be added in their respective
+implementation phases.
 
 ## Commands
 
