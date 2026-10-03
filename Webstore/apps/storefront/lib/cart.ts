@@ -37,7 +37,11 @@ export async function ensureCustomerProfile(
     .eq("id", userId)
     .maybeSingle();
 
-  if (profileError) throw new Error("Unable to load the customer profile.");
+  if (profileError) {
+    throw new Error("Unable to load the customer profile.", {
+      cause: profileError,
+    });
+  }
   if (profile) return;
 
   const { error: insertError } = await supabase
@@ -46,7 +50,9 @@ export async function ensureCustomerProfile(
 
   if (!insertError) return;
   if (insertError.code === "23505") return;
-  throw new Error("Unable to initialize the customer profile.");
+  throw new Error("Unable to initialize the customer profile.", {
+    cause: insertError,
+  });
 }
 
 export async function getOrCreateCart(
@@ -62,7 +68,9 @@ export async function getOrCreateCart(
       .eq("user_id", userId)
       .maybeSingle();
 
-    if (error) throw new Error("Unable to load the shopping cart.");
+    if (error) {
+      throw new Error("Unable to load the shopping cart.", { cause: error });
+    }
     return data?.id as string | undefined;
   };
 
@@ -81,5 +89,5 @@ export async function getOrCreateCart(
     if (cartId) return cartId;
   }
 
-  throw new Error("Unable to create the shopping cart.");
+  throw new Error("Unable to create the shopping cart.", { cause: error });
 }

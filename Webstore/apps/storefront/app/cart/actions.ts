@@ -13,6 +13,31 @@ type AvailableVariant = {
   product: { status: string };
 };
 
+function logCartFailure(action: string, error: unknown) {
+  const detail =
+    error instanceof Error && error.cause !== undefined ? error.cause : error;
+  if (detail && typeof detail === "object") {
+    const databaseError = detail as {
+      code?: unknown;
+      message?: unknown;
+    };
+    console.error(`[cart:${action}] Database operation failed`, {
+      code: typeof databaseError.code === "string" ? databaseError.code : undefined,
+      message:
+        typeof databaseError.message === "string"
+          ? databaseError.message
+          : error instanceof Error
+            ? error.message
+            : "Unknown cart error",
+    });
+    return;
+  }
+  console.error(
+    `[cart:${action}] Database operation failed`,
+    error instanceof Error ? error.message : "Unknown cart error",
+  );
+}
+
 async function requireCustomer(nextPath: string) {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
@@ -39,7 +64,10 @@ async function getAvailableVariant(
     .eq("id", variantId)
     .maybeSingle();
 
-  if (error || !data) return null;
+  if (error) {
+    throw new Error("Unable to verify product availability.", { cause: error });
+  }
+  if (!data) return null;
   const variant = data as unknown as AvailableVariant;
   if (!variant.is_active || variant.product?.status !== "active") return null;
   return variant;
@@ -68,22 +96,32 @@ export async function addCartItem(formData: FormData) {
         .eq("cart_id", cartId)
         .eq("variant_id", variantId)
         .maybeSingle();
-      if (existingError) throw new Error("Unable to read the cart item.");
+      if (existingError) {
+        throw new Error("Unable to read the cart item.", { cause: existingError });
+      }
 
       const nextQuantity = (existing?.quantity ?? 0) + quantity.data;
       if (nextQuantity > variant.stock_quantity || nextQuantity > 100) {
         failure = "stock";
       } else {
-        const { error } = await supabase
-          .from("cart_items")
-          .upsert(
-            { cart_id: cartId, variant_id: variantId, quantity: nextQuantity },
-            { onConflict: "cart_id,variant_id" },
-          );
-        if (error) throw new Error("Unable to save the cart item.");
+        const { error } = existing
+          ? await supabase
+              .from("cart_items")
+              .update({ quantity: nextQuantity })
+              .eq("id", existing.id)
+              .eq("cart_id", cartId)
+          : await supabase.from("cart_items").insert({
+              cart_id: cartId,
+              variant_id: variantId,
+              quantity: nextQuantity,
+            });
+        if (error) {
+          throw new Error("Unable to save the cart item.", { cause: error });
+        }
       }
     }
-  } catch {
+  } catch (error) {
+    logCartFailure("add", error);
     failure = "save";
   }
   if (failure) redirect(`${productPath}?cart_error=${failure}`);

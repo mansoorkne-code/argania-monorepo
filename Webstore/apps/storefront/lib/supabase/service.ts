@@ -5,8 +5,14 @@ import { getSupabasePublicConfig } from "./config";
 
 export function createServiceClient() {
   const { url } = getSupabasePublicConfig();
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!key) throw new Error("SUPABASE_SERVICE_ROLE_KEY is not configured.");
+  const key =
+    process.env.SUPABASE_SECRET_KEY?.trim() ||
+    process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (!key) {
+    throw new Error(
+      "SUPABASE_SECRET_KEY (or legacy SUPABASE_SERVICE_ROLE_KEY) is not configured.",
+    );
+  }
 
   return createSupabaseClient(url, key, {
     auth: { autoRefreshToken: false, persistSession: false },

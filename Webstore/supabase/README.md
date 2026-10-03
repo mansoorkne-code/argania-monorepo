@@ -46,10 +46,12 @@ store without reviewing migration history.
 ### Provider setup
 
 1. Add the Phase 9 variables from `.env.example` to the storefront environment.
-   Keep Razorpay secrets, Shiprocket credentials, and
-   `SUPABASE_SERVICE_ROLE_KEY` server-side. Only
-   `NEXT_PUBLIC_RAZORPAY_KEY_ID` is public.
-2. In Razorpay, create a webhook pointing to
+   Keep Razorpay secrets, Shiprocket credentials, and the Supabase secret key
+   (`SUPABASE_SECRET_KEY`, or legacy `SUPABASE_SERVICE_ROLE_KEY`) server-side.
+   Only `NEXT_PUBLIC_RAZORPAY_KEY_ID` is public.
+2. Webhooks are optional: the checkout return flow verifies payment directly
+   with Razorpay. To enable webhook backup notifications later, create a
+   Razorpay webhook pointing to
    `https://<storefront-host>/api/webhooks/razorpay`; subscribe to
    `payment.captured` and `payment.failed`, and copy its signing secret to
    `RAZORPAY_WEBHOOK_SECRET`. Use test keys for test checkout and live keys for

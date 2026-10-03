@@ -22,7 +22,53 @@ type CheckoutCartItem = {
   };
 };
 
+function inspectKey(name: string, expectedPrefixes: string[] = []) {
+  const value = process.env[name]?.trim();
+  if (!value) return "MISSING";
+  if (!expectedPrefixes.length) return `SET (length ${value.length})`;
+  const format = expectedPrefixes.find((prefix) => value.startsWith(prefix));
+  return `SET (length ${value.length}; ${format ? `format ${format}…` : "unrecognized format"})`;
+}
+
+function logCheckoutEnvironment() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  let supabaseHost = "MISSING";
+  if (supabaseUrl) {
+    try {
+      supabaseHost = `SET (${new URL(supabaseUrl).host})`;
+    } catch {
+      supabaseHost = "SET (invalid URL format)";
+    }
+  }
+
+  console.info("[checkout] Environment diagnostics (values redacted)", {
+    NEXT_PUBLIC_SUPABASE_URL: supabaseHost,
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: inspectKey(
+      "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+      ["sb_publishable_", "eyJ"],
+    ),
+    SUPABASE_SECRET_KEY: inspectKey("SUPABASE_SECRET_KEY", ["sb_secret_"]),
+    SUPABASE_SERVICE_ROLE_KEY: inspectKey("SUPABASE_SERVICE_ROLE_KEY", ["eyJ"]),
+    NEXT_PUBLIC_RAZORPAY_KEY_ID: inspectKey("NEXT_PUBLIC_RAZORPAY_KEY_ID", [
+      "rzp_test_",
+      "rzp_live_",
+    ]),
+    RAZORPAY_KEY_SECRET: inspectKey("RAZORPAY_KEY_SECRET"),
+    RAZORPAY_WEBHOOK_SECRET: process.env.RAZORPAY_WEBHOOK_SECRET?.trim()
+      ? "SET (optional)"
+      : "MISSING (optional)",
+    SHIPROCKET_API_EMAIL: inspectKey("SHIPROCKET_API_EMAIL"),
+    SHIPROCKET_API_PASSWORD: inspectKey("SHIPROCKET_API_PASSWORD"),
+    SHIPROCKET_PICKUP_PINCODE: inspectKey("SHIPROCKET_PICKUP_PINCODE"),
+    SHIPROCKET_PACKAGING_WEIGHT_KG: inspectKey("SHIPROCKET_PACKAGING_WEIGHT_KG"),
+    SHIPROCKET_PARCEL_LENGTH_CM: inspectKey("SHIPROCKET_PARCEL_LENGTH_CM"),
+    SHIPROCKET_PARCEL_BREADTH_CM: inspectKey("SHIPROCKET_PARCEL_BREADTH_CM"),
+    SHIPROCKET_PARCEL_HEIGHT_CM: inspectKey("SHIPROCKET_PARCEL_HEIGHT_CM"),
+  });
+}
+
 export async function prepareCheckout(formData: FormData) {
+  logCheckoutEnvironment();
   const input = checkoutAddressSchema.safeParse(Object.fromEntries(formData.entries()));
   if (!input.success) redirect("/checkout?error=address");
 
@@ -33,9 +79,11 @@ export async function prepareCheckout(formData: FormData) {
 
   let errorCode = "setup";
   let orderId: string | null = null;
+  let stage = "initialize cart";
   try {
     const cartId = await getOrCreateCart(sessionClient, userId);
     const serviceClient = createServiceClient();
+    stage = "load cart items with the Supabase server key";
     const { data, error: cartError } = await serviceClient
       .from("cart_items")
       .select(
@@ -45,7 +93,9 @@ export async function prepareCheckout(formData: FormData) {
         )`,
       )
       .eq("cart_id", cartId);
-    if (cartError) throw new Error("Cart could not be loaded.");
+    if (cartError) {
+      throw new Error("Cart could not be loaded.", { cause: cartError });
+    }
 
     const items = (data ?? []) as unknown as CheckoutCartItem[];
     if (!items.length) {
@@ -68,6 +118,7 @@ export async function prepareCheckout(formData: FormData) {
     );
     const weightKg = getParcelWeight(items);
     let quote;
+    stage = "request Shiprocket delivery quote";
     try {
       quote = await getShiprocketQuote({
         deliveryPostalCode: input.data.postalCode,
@@ -90,6 +141,7 @@ export async function prepareCheckout(formData: FormData) {
       postal_code: input.data.postalCode,
       country_code: "IN",
     };
+    stage = "save pending order and reserve stock";
     const { data: createdId, error: createError } = await serviceClient.rpc(
       "create_checkout_order",
       {
@@ -104,7 +156,7 @@ export async function prepareCheckout(formData: FormData) {
     );
     if (createError || typeof createdId !== "string") {
       errorCode = "stock";
-      throw new Error("Order could not be created.");
+      throw new Error("Order could not be created.", { cause: createError });
     }
     orderId = createdId;
 
@@ -124,6 +176,7 @@ export async function prepareCheckout(formData: FormData) {
       .maybeSingle();
     if (paymentError) throw new Error("Payment record could not be loaded.");
 
+    stage = "create Razorpay payment order";
     if (!savedPayment?.provider_order_id) {
       const amountMinor = Math.round(Number(order.total) * 100);
       const razorpayOrder = await createRazorpayOrder({
@@ -139,7 +192,26 @@ export async function prepareCheckout(formData: FormData) {
         .is("provider_order_id", null);
       if (updatePaymentError) throw new Error("Payment reference could not be saved.");
     }
-  } catch {
+  } catch (error) {
+    const detail =
+      error instanceof Error && error.cause !== undefined ? error.cause : error;
+    const databaseError =
+      detail && typeof detail === "object"
+        ? (detail as { code?: unknown; message?: unknown })
+        : null;
+    console.error("[checkout] Checkout preparation failed", {
+      stage,
+      code:
+        typeof databaseError?.code === "string"
+          ? databaseError.code
+          : undefined,
+      message:
+        typeof databaseError?.message === "string"
+          ? databaseError.message
+          : error instanceof Error
+            ? error.message
+            : "Unknown checkout error",
+    });
     if (orderId) {
       try {
         const serviceClient = createServiceClient();

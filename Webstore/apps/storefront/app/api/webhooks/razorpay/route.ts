@@ -12,6 +12,13 @@ type RazorpayWebhookPayment = {
 };
 
 export async function POST(request: NextRequest) {
+  if (!process.env.RAZORPAY_WEBHOOK_SECRET?.trim()) {
+    return NextResponse.json(
+      { error: "Razorpay webhook is not configured." },
+      { status: 503 },
+    );
+  }
+
   const signature = request.headers.get("x-razorpay-signature");
   if (!signature) return NextResponse.json({ error: "Missing signature." }, { status: 400 });
 

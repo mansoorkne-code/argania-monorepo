@@ -13,7 +13,18 @@ interface ShiprocketCourier {
   courier_company_id?: number | string;
   courier_name?: string;
   estimated_delivery_days?: string | number;
-  rate?: { id?: number | string; rate?: number | string; total?: number | string };
+  rate?:
+    | number
+    | string
+    | { id?: number | string; rate?: number | string; total?: number | string };
+  freight_charge?: number | string;
+}
+
+function getCourierRate(courier: ShiprocketCourier) {
+  const rate = courier.rate;
+  const nestedRate =
+    rate && typeof rate === "object" ? rate.rate ?? rate.total : rate;
+  return Number(nestedRate ?? courier.freight_charge);
 }
 
 function requiredEnv(name: string) {
@@ -74,7 +85,7 @@ export async function getShiprocketQuote(input: {
     .filter((courier) => Number(courier.blocked ?? 0) === 0 && courier.courier_company_id)
     .map((courier) => ({
       courier,
-      amount: Number(courier.rate?.rate ?? courier.rate?.total),
+      amount: getCourierRate(courier),
     }))
     .filter((candidate) => Number.isFinite(candidate.amount) && candidate.amount >= 0)
     .sort((a, b) => a.amount - b.amount);
@@ -84,7 +95,11 @@ export async function getShiprocketQuote(input: {
 
   return {
     amount: Math.round(cheapest.amount * 100) / 100,
-    reference: cheapest.courier.rate?.id ? String(cheapest.courier.rate.id) : null,
+    reference:
+      cheapest.courier.rate && typeof cheapest.courier.rate === "object" &&
+      cheapest.courier.rate.id
+        ? String(cheapest.courier.rate.id)
+        : null,
     courierId: String(cheapest.courier.courier_company_id),
     courierName: cheapest.courier.courier_name || "Shiprocket courier",
     estimatedDays: cheapest.courier.estimated_delivery_days
