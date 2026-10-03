@@ -6,12 +6,14 @@ export type ButtonSize = "sm" | "md" | "lg" | "icon";
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  children: ReactNode;
+  appName?: string;
+  children?: ReactNode;
 }
 
 export function Button({
   variant = "primary",
   size = "md",
+  appName,
   className,
   type = "button",
   children,
