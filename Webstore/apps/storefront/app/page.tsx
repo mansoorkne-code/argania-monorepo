@@ -1,102 +1,123 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
+import Link from "next/link";
+import { Badge } from "@repo/ui/badge";
+import { Card, CardContent } from "@repo/ui/card";
 import styles from "./page.module.css";
 
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
+const principles = [
+  {
+    number: "01",
+    title: "Less, with intention",
+    description: "A considered edit for the small rituals that make a day feel like your own.",
+  },
+  {
+    number: "02",
+    title: "Made for real life",
+    description: "Useful, tactile essentials designed to find their place in your everyday.",
+  },
+  {
+    number: "03",
+    title: "A slower point of view",
+    description: "Thoughtful choices, quiet details, and room to enjoy the moment.",
+  },
+];
 
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
-
+function BotanicalMark() {
   return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
+    <svg aria-hidden="true" className={styles.botanicalMark} viewBox="0 0 240 280" fill="none">
+      <path d="M119 244c-4-64 12-123 56-180" stroke="currentColor" strokeWidth="2" />
+      <path d="M119 215C70 204 49 171 49 139c39 2 65 24 70 76Z" fill="currentColor" />
+      <path d="M130 174c-1-48 25-76 62-86 7 38-12 70-62 86Z" fill="currentColor" />
+      <path d="M117 132c-37-14-53-43-49-75 34 9 53 31 49 75Z" fill="currentColor" />
+      <path d="M142 119c9-34 35-52 65-50-3 31-23 51-65 50Z" fill="currentColor" />
+      <path d="M120 246h56" stroke="currentColor" strokeWidth="2" />
+    </svg>
   );
-};
+}
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/storefront/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://turborepo.dev/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    <main>
+      <section className={styles.hero} aria-labelledby="hero-title">
+        <div className={styles.heroCopy}>
+          <Badge className={styles.eyebrow} variant="secondary">
+            Everyday, made more thoughtful
+          </Badge>
+          <h1 id="hero-title">A little ritual.<br />A softer day.</h1>
+          <p className={styles.heroDescription}>
+            Meet Argania: considered essentials and gentle rituals for the moments that make a day
+            yours.
+          </p>
+          <div className={styles.heroActions}>
+            <Link className={`ui-button ui-button--primary ui-button--lg ${styles.ctaButton}`} href="/products">
+              Explore the collection
+            </Link>
+            <Link className={styles.textLink} href="#our-approach">
+              Get to know us <span aria-hidden="true">↗</span>
+            </Link>
+          </div>
+          <p className={styles.heroNote}>Thoughtful things for the everyday.</p>
         </div>
-        <Button appName="storefront" className={styles.secondary}>
-          Open alert
-        </Button>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://turborepo.dev?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to turborepo.dev →
-        </a>
-      </footer>
-    </div>
+        <div aria-label="Abstract botanical illustration" className={styles.heroArtwork} role="img">
+          <div className={styles.artworkOrb} />
+          <div className={styles.artworkDisc} />
+          <div className={styles.artworkCard}>
+            <BotanicalMark />
+            <span>ARGANIA</span>
+            <small>A DAILY RITUAL</small>
+          </div>
+          <span className={styles.artworkCaption}>A moment, just for you</span>
+        </div>
+      </section>
+
+      <section aria-label="Our point of view" className={styles.principles}>
+        {principles.map((principle) => (
+          <Card className={styles.principleCard} key={principle.number}>
+            <CardContent className={styles.principleContent}>
+              <span className={styles.principleNumber}>{principle.number}</span>
+              <h2>{principle.title}</h2>
+              <p>{principle.description}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </section>
+
+      <section aria-labelledby="approach-title" className={styles.approach} id="our-approach">
+        <div className={styles.approachVisual}>
+          <div aria-hidden="true" className={styles.approachSun} />
+          <BotanicalMark />
+          <span>ROOTED IN THE EVERYDAY</span>
+        </div>
+        <div className={styles.approachCopy}>
+          <span className={styles.sectionKicker}>A note from Argania</span>
+          <h2 id="approach-title">Make space for the things that feel like you.</h2>
+          <p>
+            We believe a routine can be more than a list of things to do. It can be a pause, a small
+            pleasure, a way back to yourself. Argania is a home for thoughtful essentials that help
+            make room for those moments.
+          </p>
+          <Link className={styles.textLink} href="#our-approach">
+            Our approach <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
+      </section>
+
+      <section aria-labelledby="journal-title" className={styles.journal} id="journal">
+        <div>
+          <span className={styles.sectionKicker}>Notes for a slower day</span>
+          <h2 id="journal-title">Small thoughts, little rituals.</h2>
+        </div>
+        <Link className={styles.textLink} href="/#journal">
+          From the journal <span aria-hidden="true">↗</span>
+        </Link>
+      </section>
+
+      <section aria-labelledby="closing-title" className={styles.closing}>
+        <span className={styles.sectionKicker}>Take it at your own pace</span>
+        <h2 id="closing-title">Your everyday, with a little more care.</h2>
+        <Link className={`ui-button ui-button--outline ui-button--lg ${styles.closingButton}`} href="/products">
+          Find your ritual
+        </Link>
+      </section>
+    </main>
   );
 }

@@ -1,0 +1,36 @@
+.page {
+  align-items: flex-start;
+  background: var(--shell-paper);
+  display: flex;
+  justify-content: center;
+  min-height: min(650px, calc(100svh - 116px));
+  padding: 5rem 1.25rem;
+}
+
+.card {
+  max-width: 640px;
+  width: 100%;
+}
+.badge {
+  align-self: flex-start;
+  margin-bottom: 0.4rem;
+}
+.title {
+  color: var(--shell-ink);
+  font-size: 1.7rem;
+  font-weight: 500;
+  letter-spacing: -0.055em;
+}
+.content {
+  display: grid;
+  gap: 1rem;
+}
+.content p {
+  color: #686b60;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin: 0;
+}
+.content form {
+  justify-self: start;
+}

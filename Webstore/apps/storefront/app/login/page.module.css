@@ -1,0 +1,89 @@
+.page {
+  align-items: center;
+  background:
+    radial-gradient(
+      ellipse at 18% 18%,
+      rgb(209 213 192 / 58%),
+      transparent 33rem
+    ),
+    var(--shell-paper);
+  display: flex;
+  justify-content: center;
+  min-height: min(760px, calc(100svh - 116px));
+  padding: 3rem 1.25rem;
+}
+
+.card {
+  max-width: 460px;
+  width: 100%;
+}
+.cardHeader {
+  gap: 0.65rem;
+  padding: 2.5rem 2.5rem 0;
+  text-align: center;
+}
+.kicker {
+  color: var(--shell-olive);
+  font-size: 0.66rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.title {
+  color: var(--shell-ink);
+  font-size: 2.25rem;
+  font-weight: 450;
+  letter-spacing: -0.07em;
+}
+.description {
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+.cardContent {
+  display: grid;
+  gap: 1rem;
+  padding: 2rem 2.5rem 2.5rem;
+}
+.cardContent form {
+  width: 100%;
+}
+.googleButton {
+  border-radius: 999px;
+  gap: 0.7rem;
+  width: 100%;
+}
+.googleMark {
+  height: 19px;
+  width: 19px;
+}
+.terms {
+  color: #777a6e;
+  font-size: 0.7rem;
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+}
+.backLink {
+  color: var(--shell-olive);
+  font-size: 0.79rem;
+  justify-self: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.error {
+  padding: 0.9rem;
+}
+.error h2 {
+  font-size: 0.88rem;
+}
+.error p {
+  font-size: 0.76rem;
+}
+
+@media (max-width: 480px) {
+  .cardHeader {
+    padding: 2rem 1.5rem 0;
+  }
+  .cardContent {
+    padding: 1.6rem 1.5rem 2rem;
+  }
+}
