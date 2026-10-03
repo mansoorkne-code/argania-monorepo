@@ -1,0 +1,4 @@
+.container { display: grid; gap: 0.8rem; }
+.button { width: 100%; }
+.error { color: #963f34; font-size: 0.76rem; line-height: 1.5; margin: 0; }
+.secureNote { color: #74776c; font-size: 0.7rem; line-height: 1.5; margin: 0; text-align: center; }

@@ -1,0 +1,243 @@
+.page {
+  background: var(--shell-paper);
+  color: var(--shell-ink);
+  min-height: 65svh;
+  padding: 0 clamp(1.25rem, 7vw, 7rem) 6rem;
+}
+
+.intro {
+  margin: 0 auto;
+  max-width: 760px;
+  padding: clamp(4rem, 9vw, 7.5rem) 0 3rem;
+  text-align: center;
+}
+
+.kicker {
+  color: #777b69;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.intro h1 {
+  font-size: clamp(2.5rem, 5.5vw, 4.6rem);
+  font-weight: 450;
+  letter-spacing: -0.075em;
+  line-height: 1.05;
+  margin: 1rem 0 0.9rem;
+}
+
+.intro p {
+  color: #6f7165;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  margin: 0 auto;
+  max-width: 480px;
+}
+
+.collection {
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+.filters {
+  align-items: end;
+  border-bottom: 1px solid var(--shell-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 0 0 1.25rem;
+}
+
+.filters label {
+  display: grid;
+  gap: 0.45rem;
+}
+.filters label > span {
+  color: #62665a;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.filters input,
+.filters select {
+  background: #fffefa;
+  border: 1px solid #dadbd0;
+  border-radius: 0;
+  color: var(--shell-ink);
+  font: inherit;
+  font-size: 0.82rem;
+  height: 2.75rem;
+  padding: 0 0.85rem;
+}
+
+.filters input:focus-visible,
+.filters select:focus-visible,
+.filterButton:focus-visible,
+.clearFilters:focus-visible {
+  outline: 2px solid var(--shell-olive);
+  outline-offset: 2px;
+}
+
+.searchField {
+  flex: 1 1 250px;
+}
+.categoryField {
+  flex: 0 1 220px;
+}
+
+.filterButton {
+  background: var(--shell-olive);
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  height: 2.75rem;
+  padding: 0 1.25rem;
+}
+
+.filterButton:hover {
+  background: #50593e;
+}
+.clearFilters {
+  color: #55594a;
+  font-size: 0.78rem;
+  padding: 0.85rem 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.productGrid {
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.productCard {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+}
+.productLink {
+  color: inherit;
+  display: block;
+  text-decoration: none;
+}
+.productImage {
+  align-items: center;
+  aspect-ratio: 0.86;
+  background-color: #e8e7db;
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.productImage > span {
+  color: #71795c;
+  font-family: Georgia, serif;
+  font-size: clamp(4rem, 10vw, 9rem);
+  font-weight: 400;
+}
+.stockBadge {
+  bottom: 0.8rem;
+  left: 0.8rem;
+  position: absolute;
+}
+.productInfo {
+  padding: 1rem 0 0;
+}
+.productTitleRow {
+  align-items: baseline;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+.productTitleRow h2 {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+.productTitleRow > span {
+  color: #45493e;
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+.productInfo > p {
+  color: #7a7c70;
+  font-size: 0.76rem;
+  margin: 0.45rem 0 0;
+}
+.productLink:hover .productTitleRow h2 {
+  color: var(--shell-olive);
+}
+.productLink:focus-visible {
+  outline: 2px solid var(--shell-olive);
+  outline-offset: 4px;
+}
+.emptyState {
+  margin: 4rem auto;
+  max-width: 520px;
+}
+.pagination {
+  align-items: center;
+  color: #686b60;
+  display: flex;
+  font-size: 0.78rem;
+  justify-content: space-between;
+  margin: 2.5rem auto 0;
+  max-width: 560px;
+}
+.pagination a {
+  color: #50593e;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.pagination a:focus-visible {
+  outline: 2px solid var(--shell-olive);
+  outline-offset: 3px;
+}
+
+@media (max-width: 850px) {
+  .productGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .intro {
+    padding-top: 4rem;
+  }
+  .filters {
+    align-items: stretch;
+  }
+  .searchField,
+  .categoryField {
+    flex-basis: 100%;
+  }
+  .filterButton {
+    flex: 1;
+  }
+  .productGrid {
+    gap: 1.4rem 0.85rem;
+  }
+  .productTitleRow {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .productTitleRow h2 {
+    font-size: 0.9rem;
+  }
+}

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { cartItemInputSchema, variantIdSchema } from "./cart.js";
+import { cartItemInputSchema, variantIdSchema } from "./cart";
 
 export const couponCodeSchema = z
   .string()
@@ -16,3 +16,16 @@ export const checkoutInputSchema = z.object({
 });
 
 export type CheckoutInput = z.infer<typeof checkoutInputSchema>;
+
+export const checkoutAddressSchema = z.object({
+  checkoutKey: z.uuid(),
+  recipientName: z.string().trim().min(2).max(120),
+  phone: z.string().trim().regex(/^[6-9]\d{9}$/),
+  line1: z.string().trim().min(3).max(240),
+  line2: z.string().trim().max(240).optional().default(""),
+  city: z.string().trim().min(2).max(100),
+  state: z.string().trim().min(2).max(100),
+  postalCode: z.string().trim().regex(/^\d{6}$/),
+});
+
+export type CheckoutAddressInput = z.infer<typeof checkoutAddressSchema>;

@@ -1,0 +1,6 @@
+.page { align-items: flex-start; background: var(--shell-paper); color: var(--shell-ink); display: flex; justify-content: center; min-height: 65svh; padding: 5rem 1rem; }
+.card { align-content: start; background: #fffefa; border: 1px solid #e3e2d8; border-radius: 0; box-shadow: none; display: grid; gap: 1rem; max-width: 620px; padding: clamp(1.5rem, 5vw, 3rem); width: 100%; }
+.kicker { color: #777b69; font-size: 0.68rem; letter-spacing: 0.14em; margin-top: 0.4rem; text-transform: uppercase; }
+.card h1 { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 450; letter-spacing: -0.08em; line-height: 1; margin: 0; }
+.card p { color: #6f7165; font-size: 0.9rem; line-height: 1.7; margin: 0; }
+.link { color: #50593e; font-size: 0.8rem; justify-self: start; margin-top: 0.5rem; text-decoration: underline; text-underline-offset: 4px; }

@@ -1,0 +1,25 @@
+.page { background: var(--shell-paper); color: var(--shell-ink); min-height: 65svh; padding: 0 clamp(1rem, 7vw, 7rem) 6rem; }
+.heading { margin: 0 auto; max-width: 760px; padding: clamp(3rem, 7vw, 5.5rem) 0 2.5rem; text-align: center; }
+.kicker { color: #777b69; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; }
+.heading h1 { font-size: clamp(2.4rem, 5vw, 4.2rem); font-weight: 450; letter-spacing: -0.075em; line-height: 1.05; margin: 1rem 0 0.8rem; }
+.heading p { color: #6f7165; font-size: 0.88rem; line-height: 1.7; margin: 0 auto; }
+.layout { align-items: start; display: grid; gap: clamp(1.5rem, 5vw, 4rem); grid-template-columns: minmax(0, 1fr) minmax(270px, 350px); margin: 0 auto; max-width: 1180px; }
+.orderCard { background: #fffefa; border: 1px solid #e3e2d8; border-radius: 0; box-shadow: none; padding: clamp(1rem, 3vw, 1.8rem); }
+.cardHeading { align-items: center; border-bottom: 1px solid #e3e2d8; display: flex; justify-content: space-between; padding-bottom: 1rem; }
+.cardHeading h2, .paymentCard h2 { font-size: 1rem; font-weight: 500; margin: 0; }
+.items { display: grid; gap: 1rem; list-style: none; margin: 1.2rem 0; padding: 0; }
+.items li { align-items: start; display: flex; font-size: 0.78rem; gap: 1rem; justify-content: space-between; }
+.items li > div { display: grid; gap: 0.35rem; }
+.items li > div strong, .items li > strong { font-weight: 500; }
+.items li span { color: #74776c; font-size: 0.73rem; }
+.totals { border-top: 1px solid #e3e2d8; display: grid; gap: 0.75rem; padding-top: 1rem; }
+.totals p { align-items: center; color: #62665a; display: flex; font-size: 0.8rem; justify-content: space-between; margin: 0; }
+.totals p strong { color: var(--shell-ink); font-weight: 500; }
+.totals .grandTotal { border-top: 1px solid #e3e2d8; color: var(--shell-ink); font-size: 0.9rem; margin-top: 0.25rem; padding-top: 0.9rem; }
+.totals .grandTotal strong { font-size: 1rem; font-weight: 600; }
+.address { border-top: 1px solid #e3e2d8; margin-top: 1.2rem; padding-top: 1.2rem; }
+.address h2 { font-size: 0.75rem; font-weight: 550; letter-spacing: 0.07em; margin: 0 0 0.6rem; text-transform: uppercase; }
+.address p { color: #62665a; font-size: 0.77rem; line-height: 1.65; margin: 0; }
+.paymentCard { background: #efeee5; display: grid; gap: 1.2rem; padding: 1.4rem; position: sticky; top: 1.5rem; }
+.backLink { color: #50593e; font-size: 0.78rem; justify-self: center; text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 800px) { .layout { grid-template-columns: 1fr; } .paymentCard { position: static; } }
