@@ -1,24 +1,7 @@
 import Link from "next/link";
 import { createClient } from "../../lib/supabase/server";
+import { StickyHeaderContainer } from "./sticky-header-container";
 import styles from "./storefront-shell.module.css";
-
-function BrandMark() {
-  return (
-    <svg
-      aria-hidden="true"
-      className={styles.brandMark}
-      viewBox="0 0 32 32"
-      fill="none"
-    >
-      <path d="M16 28C7 22 5 11 15 4c8 7 10 17 1 24Z" fill="currentColor" />
-      <path
-        d="M8 20c5 0 10 2 14 6M16 8c1 7 1 12 0 18"
-        stroke="var(--shell-header)"
-        strokeWidth="1.2"
-      />
-    </svg>
-  );
-}
 
 function SearchIcon() {
   return (
@@ -35,6 +18,29 @@ function SearchIcon() {
         stroke="currentColor"
         strokeWidth="1.6"
         strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle
+        cx="12"
+        cy="7"
+        r="4"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -65,20 +71,24 @@ export async function StorefrontHeader() {
   const signedIn = Boolean(data?.claims?.sub);
 
   return (
-    <>
+    <StickyHeaderContainer>
       <div className={styles.announcement}>
         <p>A little more care, built into your everyday.</p>
       </div>
       <header className={styles.header}>
         <Link aria-label="Argania home" className={styles.brand} href="/">
-          <BrandMark />
-          <span>argania</span>
+          <img
+            src="https://www.arganiaprofessional.com/cdn/shop/files/1.png"
+            alt="Argania Professional"
+            className={styles.brandImage}
+          />
         </Link>
 
         <nav aria-label="Main navigation" className={styles.desktopNav}>
-          <Link href="/products">Shop</Link>
-          <Link href="/#our-approach">Our approach</Link>
-          <Link href="/#journal">Journal</Link>
+          <Link href="/">Home</Link>
+          <Link href="/products">Catalogue</Link>
+          <Link href="/#contact">Contact</Link>
+          <Link href="/#about">About us</Link>
         </nav>
 
         <div className={styles.headerActions}>
@@ -90,10 +100,12 @@ export async function StorefrontHeader() {
             <SearchIcon />
           </Link>
           <Link
-            className={styles.accountLink}
+            aria-label={signedIn ? "Account" : "Sign in"}
+            title={signedIn ? "Account" : "Sign in"}
+            className={styles.iconLink}
             href={signedIn ? "/account" : "/login"}
           >
-            {signedIn ? "Account" : "Sign in"}
+            <UserIcon />
           </Link>
           <Link
             aria-label="Shopping bag"
@@ -108,9 +120,10 @@ export async function StorefrontHeader() {
               <span />
             </summary>
             <nav aria-label="Mobile navigation" className={styles.mobileNav}>
-              <Link href="/products">Shop</Link>
-              <Link href="/#our-approach">Our approach</Link>
-              <Link href="/#journal">Journal</Link>
+              <Link href="/">Home</Link>
+              <Link href="/products">Catalogue</Link>
+              <Link href="/#contact">Contact</Link>
+              <Link href="/#about">About us</Link>
               <Link href={signedIn ? "/account" : "/login"}>
                 {signedIn ? "Account" : "Sign in"}
               </Link>
@@ -118,6 +131,6 @@ export async function StorefrontHeader() {
           </details>
         </div>
       </header>
-    </>
+    </StickyHeaderContainer>
   );
 }

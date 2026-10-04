@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@repo/ui/badge";
 import { Card, CardContent } from "@repo/ui/card";
+import { ArganiaHero } from "./components/argania-hero";
 import styles from "./page.module.css";
 
 const principles = [
@@ -37,37 +38,7 @@ function BotanicalMark() {
 export default function Home() {
   return (
     <main>
-      <section className={styles.hero} aria-labelledby="hero-title">
-        <div className={styles.heroCopy}>
-          <Badge className={styles.eyebrow} variant="secondary">
-            Everyday, made more thoughtful
-          </Badge>
-          <h1 id="hero-title">A little ritual.<br />A softer day.</h1>
-          <p className={styles.heroDescription}>
-            Meet Argania: considered essentials and gentle rituals for the moments that make a day
-            yours.
-          </p>
-          <div className={styles.heroActions}>
-            <Link className={`ui-button ui-button--primary ui-button--lg ${styles.ctaButton}`} href="/products">
-              Explore the collection
-            </Link>
-            <Link className={styles.textLink} href="#our-approach">
-              Get to know us <span aria-hidden="true">↗</span>
-            </Link>
-          </div>
-          <p className={styles.heroNote}>Thoughtful things for the everyday.</p>
-        </div>
-        <div aria-label="Abstract botanical illustration" className={styles.heroArtwork} role="img">
-          <div className={styles.artworkOrb} />
-          <div className={styles.artworkDisc} />
-          <div className={styles.artworkCard}>
-            <BotanicalMark />
-            <span>ARGANIA</span>
-            <small>A DAILY RITUAL</small>
-          </div>
-          <span className={styles.artworkCaption}>A moment, just for you</span>
-        </div>
-      </section>
+      <ArganiaHero />
 
       <section aria-label="Our point of view" className={styles.principles}>
         {principles.map((principle) => (
