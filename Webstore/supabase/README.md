@@ -43,6 +43,15 @@ existing Supabase migration history and schema first, then apply it with
 `supabase db push`; do not push the Phase 2 baseline over the manually prepared
 store without reviewing migration history.
 
+## Category metadata
+
+`migrations/20261004120000_category_metadata.sql` adds nullable `image_path` and
+an `active`/`draft`/`archived` status (existing categories become `active`).
+Apply this additive migration to the existing store before deploying the
+storefront changes. For a manually managed project, run the migration SQL in
+the Supabase SQL Editor. Add category image object paths from the public image
+bucket; only active categories appear on the shop page.
+
 ### Provider setup
 
 1. Add the Phase 9 variables from `.env.example` to the storefront environment.
@@ -75,6 +84,7 @@ the image objects, and save each object path in `product_images.storage_path`.
 For example, an object uploaded as `daily-oil/front.jpg` should use that same
 path in the row. Keep write access restricted to trusted administrators; public
 read access is needed for storefront visitors to view the catalog images.
+Category `image_path` values use the same bucket and path convention.
 
 ## Security boundary
 
