@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Badge } from "@repo/ui/badge";
 import { Card, CardContent } from "@repo/ui/card";
 import { ArganiaHero } from "./components/argania-hero";
+import { Categories } from "./components/categories";
 import styles from "./page.module.css";
 
 const principles = [
@@ -39,6 +40,7 @@ export default function Home() {
   return (
     <main>
       <ArganiaHero />
+      <Categories />
 
       <section aria-label="Our point of view" className={styles.principles}>
         {principles.map((principle) => (

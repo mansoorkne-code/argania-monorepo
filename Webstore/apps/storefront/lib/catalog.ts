@@ -5,6 +5,8 @@ export interface CatalogCategory {
   name: string;
   slug: string;
   description: string | null;
+  imagePath: string | null;
+  imageUrl: string | null;
 }
 
 export interface CatalogVariant {
@@ -149,12 +151,22 @@ export async function getCatalogCategories(): Promise<CatalogCategory[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("categories")
-    .select("id, name, slug, description")
+    .select("id, name, slug, description, image_path")
+    .eq("status", "active")
     .order("name");
 
   if (error)
     throw new Error("Unable to load catalog categories.", { cause: error });
-  return (data ?? []) as CatalogCategory[];
+  return (data ?? []).map((category) => ({
+    id: category.id,
+    name: category.name,
+    slug: category.slug,
+    description: category.description,
+    imagePath: category.image_path,
+    imageUrl: category.image_path
+      ? getProductImageUrl(category.image_path) || null
+      : null,
+  }));
 }
 
 export async function getCatalogProducts(options?: {
