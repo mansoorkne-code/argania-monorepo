@@ -1,0 +1,74 @@
+.page {
+  align-items: center;
+  background:
+    radial-gradient(ellipse at 20% 10%, #e6eadf, transparent 35rem), #f6f7f5;
+  display: flex;
+  justify-content: center;
+  min-height: 100svh;
+  padding: 1.5rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e7e9e3;
+  border-radius: 1rem;
+  box-shadow: 0 24px 70px rgb(34 42 31 / 8%);
+  max-width: 430px;
+  padding: 2.5rem;
+  text-align: center;
+  width: 100%;
+}
+
+.brandMark {
+  align-items: center;
+  background: #eef1e8;
+  border-radius: 1rem;
+  color: #576342;
+  display: inline-flex;
+  font-family: Georgia, serif;
+  font-size: 1.8rem;
+  height: 3rem;
+  justify-content: center;
+  width: 3rem;
+}
+
+.eyebrow {
+  color: #77816a;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  margin: 1.4rem 0 0.5rem;
+  text-transform: uppercase;
+}
+
+.card h1 {
+  font-size: 1.8rem;
+  letter-spacing: -0.05em;
+  margin: 0;
+}
+
+.description {
+  color: #70766b;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  margin: 0.8rem 0 1.5rem;
+}
+
+.message {
+  background: #f2f3ef;
+  border-radius: 0.5rem;
+  color: #5d6655;
+  font-size: 0.8rem;
+  margin: 0 0 1rem;
+  padding: 0.8rem;
+}
+
+.card form,
+.card button {
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 2rem 1.4rem;
+  }
+}

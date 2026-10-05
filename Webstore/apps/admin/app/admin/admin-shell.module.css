@@ -1,0 +1,359 @@
+.frame {
+  --admin-accent: #596748;
+  --admin-accent-soft: #edf1e8;
+  --admin-ink: #242a22;
+  --admin-muted: #81877d;
+  --admin-line: #e8ebe5;
+  color: var(--admin-ink);
+  min-height: 100svh;
+}
+
+.sidebar {
+  background: #fff;
+  border-right: 1px solid var(--admin-line);
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  left: 0;
+  padding: 1.25rem 1rem 1rem;
+  position: fixed;
+  top: 0;
+  width: 252px;
+  z-index: 30;
+}
+
+.brand {
+  align-items: center;
+  border-bottom: 1px solid var(--admin-line);
+  display: flex;
+  gap: 0.75rem;
+  min-height: 4.25rem;
+  padding: 0 0.6rem 1rem;
+}
+
+.brandMark {
+  align-items: center;
+  background: #edf1e8;
+  border-radius: 0.85rem;
+  color: var(--admin-accent);
+  display: inline-flex;
+  font-family: Georgia, serif;
+  font-size: 1.6rem;
+  height: 2.8rem;
+  justify-content: center;
+  width: 2.8rem;
+}
+
+.brandText {
+  display: grid;
+  gap: 0.18rem;
+}
+.brandText strong {
+  font-size: 0.96rem;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+.brandText small {
+  color: var(--admin-muted);
+  font-size: 0.57rem;
+  letter-spacing: 0.13em;
+}
+.navLabel {
+  color: #9a9f96;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  margin: 1.5rem 0 0.65rem 0.7rem;
+  text-transform: uppercase;
+}
+.navigation {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.navLink {
+  align-items: center;
+  border-radius: 0.6rem;
+  color: #60675d;
+  display: flex;
+  font-size: 0.84rem;
+  gap: 0.8rem;
+  min-height: 2.7rem;
+  padding: 0 0.75rem;
+  position: relative;
+  text-decoration: none;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.navLink:hover {
+  background: #f6f7f4;
+  color: var(--admin-ink);
+}
+.navLinkActive {
+  background: var(--admin-accent-soft);
+  color: var(--admin-accent);
+  font-weight: 600;
+}
+.navLinkActive:hover {
+  background: var(--admin-accent-soft);
+  color: var(--admin-accent);
+}
+.navIcon {
+  flex: 0 0 auto;
+  height: 1.05rem;
+  width: 1.05rem;
+}
+.activeMark {
+  background: var(--admin-accent);
+  border-radius: 99px;
+  height: 1.1rem;
+  margin-left: auto;
+  width: 3px;
+}
+.sidebarFooter {
+  align-items: center;
+  border-top: 1px solid var(--admin-line);
+  color: #7b8275;
+  display: flex;
+  font-size: 0.73rem;
+  gap: 0.55rem;
+  margin-top: auto;
+  padding: 1rem 0.6rem 0.25rem;
+}
+.statusDot {
+  background: #83a66b;
+  border-radius: 50%;
+  height: 0.42rem;
+  width: 0.42rem;
+}
+
+.mainColumn {
+  margin-left: 252px;
+  min-height: 100svh;
+}
+.header {
+  align-items: center;
+  background: rgb(255 255 255 / 92%);
+  border-bottom: 1px solid var(--admin-line);
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  min-height: 5.5rem;
+  padding: 0.9rem clamp(1.25rem, 3vw, 2.5rem);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.headerTitle {
+  align-items: flex-start;
+  display: grid;
+  gap: 0.28rem;
+  min-width: 0;
+}
+.breadcrumbs {
+  align-items: center;
+  color: #8b9187;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.67rem;
+  gap: 0.48rem;
+}
+.crumb {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.48rem;
+}
+.crumb a {
+  color: #7c8378;
+  text-decoration: none;
+}
+.crumb a:hover {
+  color: var(--admin-accent);
+}
+.crumb [aria-current="page"] {
+  color: var(--admin-accent);
+}
+.crumbSeparator {
+  color: #c3c8bf;
+}
+.headerTitle h1 {
+  font-size: 1.25rem;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+  margin: 0;
+}
+.profileMenu {
+  position: relative;
+}
+.profileMenu summary {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 0.7rem;
+  list-style: none;
+}
+.profileMenu summary::-webkit-details-marker {
+  display: none;
+}
+.avatar {
+  align-items: center;
+  background: #e7ebdf;
+  border-radius: 50%;
+  color: var(--admin-accent);
+  display: inline-flex;
+  font-size: 0.68rem;
+  font-weight: 700;
+  height: 2.25rem;
+  justify-content: center;
+  width: 2.25rem;
+}
+.profileCopy {
+  display: grid;
+  gap: 0.2rem;
+}
+.profileCopy strong {
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+.profileCopy small {
+  color: var(--admin-muted);
+  font-size: 0.66rem;
+}
+.chevron {
+  color: #92988e;
+  height: 0.85rem;
+  width: 0.85rem;
+}
+.profileDropdown {
+  background: #fff;
+  border: 1px solid var(--admin-line);
+  border-radius: 0.7rem;
+  box-shadow: 0 12px 34px rgb(35 42 32 / 12%);
+  min-width: 205px;
+  padding: 0.65rem;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.8rem);
+  z-index: 40;
+}
+.profileEmail {
+  color: #858b82;
+  display: block;
+  font-size: 0.69rem;
+  overflow-wrap: anywhere;
+  padding: 0.55rem 0.55rem 0.8rem;
+}
+.signOutButton {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--admin-line);
+  color: #5b6258;
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  font-size: 0.77rem;
+  gap: 0.55rem;
+  padding: 0.8rem 0.55rem 0.45rem;
+  text-align: left;
+  width: 100%;
+}
+.signOutButton:hover {
+  color: #9b453d;
+}
+.signOutButton svg {
+  height: 1rem;
+  width: 1rem;
+}
+.content {
+  margin: 0 auto;
+  max-width: 1500px;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+.menuToggle {
+  display: none;
+}
+.backdrop {
+  display: none;
+}
+
+@media (max-width: 840px) {
+  .sidebar {
+    box-shadow: 12px 0 35px rgb(25 30 24 / 10%);
+    transform: translateX(-105%);
+    transition: transform 180ms ease;
+    visibility: hidden;
+  }
+  .sidebarOpen {
+    transform: translateX(0);
+    visibility: visible;
+  }
+  .mainColumn {
+    margin-left: 0;
+  }
+  .header {
+    min-height: 4.8rem;
+    padding: 0.75rem 1.25rem;
+  }
+  .headerTitle {
+    grid-template-columns: auto 1fr;
+    column-gap: 0.8rem;
+  }
+  .headerTitle h1 {
+    grid-column: 2;
+  }
+  .breadcrumbs {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .menuToggle {
+    align-self: center;
+    background: #f3f5f1;
+    border: 1px solid #e7eae4;
+    border-radius: 0.55rem;
+    display: grid;
+    gap: 4px;
+    height: 2.3rem;
+    justify-content: center;
+    padding: 0.5rem;
+    width: 2.3rem;
+  }
+  .menuToggle span {
+    background: #525b4c;
+    border-radius: 3px;
+    height: 1.5px;
+    width: 1rem;
+  }
+  .backdrop {
+    background: rgb(28 34 27 / 40%);
+    border: 0;
+    display: block;
+    inset: 0;
+    position: fixed;
+    z-index: 25;
+  }
+}
+
+@media (max-width: 520px) {
+  .header {
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+  }
+  .profileCopy,
+  .chevron {
+    display: none;
+  }
+  .content {
+    padding: 1.15rem 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navLink,
+  .sidebar {
+    transition: none;
+  }
+}

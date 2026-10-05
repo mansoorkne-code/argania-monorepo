@@ -4,14 +4,17 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3001",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node scripts/with-workspace-env.mjs dev --port 3001",
+    "build": "node scripts/with-workspace-env.mjs build",
+    "start": "node scripts/with-workspace-env.mjs start",
     "lint": "eslint --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@next/env": "16.3.4",
     "@repo/ui": "workspace:*",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
     "next": "16.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8"
