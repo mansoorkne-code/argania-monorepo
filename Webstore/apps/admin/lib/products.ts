@@ -21,6 +21,15 @@ export type ProductVariantRecord = {
   created_at: string;
 };
 
+export type AdminProductImageRecord = {
+  id: string;
+  variant_id: string | null;
+  storage_path: string;
+  alt_text: string | null;
+  position: number;
+  created_at: string;
+};
+
 export type AdminProductRecord = {
   id: string;
   name: string;
@@ -31,6 +40,7 @@ export type AdminProductRecord = {
   created_at: string;
   category: { name: string } | null;
   product_variants: ProductVariantRecord[];
+  product_images: AdminProductImageRecord[];
 };
 
 export async function getProductCategories(supabase: SupabaseClient) {
@@ -88,7 +98,7 @@ export async function getProductById(id: string, supabase: SupabaseClient) {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id, name, slug, description, category_id, status, created_at, category:categories(name), product_variants(id, sku, name, price, compare_at_price, stock_quantity, weight_kg, is_active, created_at)",
+      "id, name, slug, description, category_id, status, created_at, category:categories(name), product_variants(id, sku, name, price, compare_at_price, stock_quantity, weight_kg, is_active, created_at), product_images(id, variant_id, storage_path, alt_text, position, created_at)",
     )
     .eq("id", id)
     .maybeSingle();
@@ -98,6 +108,11 @@ export async function getProductById(id: string, supabase: SupabaseClient) {
   const product = data as unknown as AdminProductRecord;
   product.product_variants = (product.product_variants ?? []).sort(
     (left, right) => left.created_at.localeCompare(right.created_at),
+  );
+  product.product_images = (product.product_images ?? []).sort(
+    (left, right) =>
+      left.position - right.position ||
+      left.created_at.localeCompare(right.created_at),
   );
   return product;
 }

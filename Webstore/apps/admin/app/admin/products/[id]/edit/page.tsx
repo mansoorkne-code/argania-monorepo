@@ -3,17 +3,24 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ErrorState } from "@repo/ui/error-state";
 import { getProductAccess } from "../../../../../lib/product-access";
+import type {
+  AdminProductRecord,
+  ProductCategoryOption,
+} from "../../../../../lib/products";
 import {
   getProductById,
   getProductCategories,
 } from "../../../../../lib/products";
 import { updateProductAction } from "../../actions";
 import { ProductForm } from "../../product-form";
+import { ImageManager } from "../../image-manager";
 import styles from "../../products.module.css";
 
 export const metadata: Metadata = { title: "Edit product" };
 
-type EditProductPageProps = { params: Promise<{ id: string }> };
+type EditProductPageProps = {
+  params: Promise<{ id: string }>;
+};
 
 export default async function EditProductPage({
   params,
@@ -29,8 +36,8 @@ export default async function EditProductPage({
   const { supabase, role } = await getProductAccess();
   if (role !== "admin") redirect("/admin/products?error=forbidden");
 
-  let product;
-  let categories;
+  let product: AdminProductRecord | null;
+  let categories: ProductCategoryOption[];
   try {
     [product, categories] = await Promise.all([
       getProductById(id, supabase),
@@ -75,6 +82,11 @@ export default async function EditProductPage({
           primaryVariant: product.product_variants[0] ?? null,
           variantCount: product.product_variants.length,
         }}
+      />
+      <ImageManager
+        images={product.product_images ?? []}
+        productId={product.id}
+        variants={product.product_variants}
       />
     </div>
   );
