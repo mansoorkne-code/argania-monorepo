@@ -316,6 +316,121 @@
   color: #626b5d;
   font-size: 0.88rem;
 }
+.imagePicker {
+  align-items: center;
+  background: #f6f8f3;
+  border: 1px dashed #aeb8a4;
+  border-radius: 0.6rem;
+  color: #526542;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 0.86rem;
+  font-weight: 650;
+  justify-content: center;
+  min-height: 3.5rem;
+  padding: 0.75rem 1rem;
+  width: fit-content;
+}
+.imagePicker input {
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+.imagePicker:focus-within {
+  outline: 3px solid #7386614a;
+}
+.imageMessage {
+  background: #f2f5ed;
+  border-radius: 0.5rem;
+  color: #4f6044;
+  font-size: 0.84rem;
+  margin: 0.85rem 0 0;
+  padding: 0.7rem 0.85rem;
+}
+.imageGrid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  margin-top: 1rem;
+}
+.imageCard {
+  align-content: start;
+  background: #fcfcfb;
+  border: 1px solid #e6e9e3;
+  border-radius: 0.7rem;
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.75rem;
+}
+.imagePreview {
+  background: #f0f1ee;
+  border-radius: 0.45rem;
+  height: 180px;
+  object-fit: contain;
+  width: 100%;
+}
+.imageFileName {
+  color: #777e73;
+  font-size: 0.76rem;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.imageField {
+  color: #4b5347;
+  display: grid;
+  font-size: 0.76rem;
+  font-weight: 600;
+  gap: 0.35rem;
+}
+.imageField input,
+.imageField select {
+  background: #fff;
+  border: 1px solid #d9ded6;
+  border-radius: 0.45rem;
+  color: #252b23;
+  font: inherit;
+  font-weight: 400;
+  min-height: 2.35rem;
+  padding: 0.45rem 0.55rem;
+  width: 100%;
+}
+.imageActions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.imageActionButton,
+.imageDeleteButton {
+  background: #fff;
+  border: 1px solid #d9ded6;
+  border-radius: 0.42rem;
+  color: #526542;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.76rem;
+  min-height: 2rem;
+  padding: 0.35rem 0.55rem;
+}
+.imageDeleteButton {
+  border-color: #edd4d0;
+  color: #a2463e;
+  margin-left: auto;
+}
+.imageActionButton:disabled,
+.imageDeleteButton:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+.imageEmpty {
+  color: #747b72;
+  font-size: 0.86rem;
+  margin: 1rem 0 0;
+}
 .srOnly {
   clip: rect(0, 0, 0, 0);
   clip-path: inset(50%);

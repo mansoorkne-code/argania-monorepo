@@ -309,7 +309,11 @@ export function ProductForm({ action, categories, product }: ProductFormProps) {
 
       <div className={styles.formActions}>
         <Button disabled={pending} type="submit">
-          {pending ? "Saving…" : editing ? "Save product" : "Create product"}
+          {pending
+            ? "Saving…"
+            : editing
+              ? "Save product"
+              : "Create product and add images"}
         </Button>
         <Link className={styles.cancelLink} href="/admin/products">
           Cancel

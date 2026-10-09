@@ -112,7 +112,7 @@ export async function createProductAction(
 
   revalidatePath("/admin/products");
   revalidatePath("/admin");
-  redirect("/admin/products?notice=created");
+  redirect(`/admin/products/new?productId=${product.id}`);
 }
 
 export async function updateProductAction(

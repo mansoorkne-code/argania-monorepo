@@ -77,17 +77,25 @@ bucket; only active categories appear on the shop page.
 ## Public product images
 
 The storefront reads product image paths from `public.product_images` and
-renders objects from a public Supabase Storage bucket. Create a public bucket
-named `product-images` (or set
-`NEXT_PUBLIC_SUPABASE_PRODUCT_IMAGES_BUCKET` to the bucket you choose), upload
-the image objects, and save each object path in `product_images.storage_path`.
-For example, an object uploaded as `daily-oil/front.jpg` should use that same
-path in the row. Keep write access restricted to trusted administrators; public
-read access is needed for storefront visitors to view the catalog images.
-Category `image_path` values use the same bucket and path convention.
+renders objects from the public `product-images` bucket. Apply
+`20261009100000_product_image_storage.sql` after the initial schema and Phase 3
+RLS setup. It provisions the bucket, admin-only upload/update/delete policies,
+public object reads, image-table policies, and the atomic image-reordering
+function. The admin product editor then uploads images directly to Storage and
+records paths in `public.product_images.storage_path`. Paths are generated as
+`<product-uuid>/<image-uuid>.<extension>`; do not edit them manually.
+
+If migrations are applied from Supabase Dashboard, open **SQL Editor**, paste
+the contents of that migration, and run it once. You do not also need to create
+the bucket or add Storage policies in the dashboard. Keep
+`NEXT_PUBLIC_SUPABASE_PRODUCT_IMAGES_BUCKET` unset so both apps use
+`product-images`, unless you also change the bucket name and its policies in the
+migration. Category `image_path` values continue to use this same bucket.
 
 ## Security boundary
 
-This migration intentionally creates no Row Level Security policies. Phase 3
-must enable RLS and add policies before browser clients are connected to these
-tables. Never expose a service-role key to either Next.js application.
+The initial schema migration intentionally creates no general Row Level
+Security policies. Phase 3 must enable RLS and add policies before browser
+clients are connected to those tables. The product image migration adds only
+the policies needed for image metadata and Storage objects. Never expose a
+service-role key to either Next.js application.
