@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./argania-hero.module.css";
+import { getStorefrontAssetUrl } from "../../lib/storefront-assets";
 
 interface Slide {
   id: number;
@@ -17,29 +18,29 @@ const slides: Slide[] = [
     id: 1,
     title: "Pure Organic Argan Oil",
     link: "/products",
-    imageDesktop: "/images/hero/hero_banner_1.jpg",
-    imageMobile: "/images/hero/hero_banner_1.jpg",
+    imageDesktop: getStorefrontAssetUrl("assets/hero-slider/aloe.webp"),
+    imageMobile: getStorefrontAssetUrl("assets/hero-slider/aloe.webp"),
   },
   {
     id: 2,
     title: "Hydrating Serums Collection",
     link: "/products",
-    imageDesktop: "/images/hero/hero_banner_2.jpg",
-    imageMobile: "/images/hero/hero_banner_2.jpg",
+    imageDesktop: getStorefrontAssetUrl("assets/hero-slider/serum.webp"),
+    imageMobile: getStorefrontAssetUrl("assets/hero-slider/serum.webp"),
   },
   {
     id: 3,
     title: "Luxury Argan Gift Box",
     link: "/products",
-    imageDesktop: "/images/hero/hero_banner_3.jpg",
-    imageMobile: "/images/hero/hero_banner_3.jpg",
+    imageDesktop: getStorefrontAssetUrl("assets/hero-slider/day.webp"),
+    imageMobile: getStorefrontAssetUrl("assets/hero-slider/day.webp"),
   },
   {
     id: 4,
     title: "Nourishing Hair Care Ritual",
     link: "/products",
-    imageDesktop: "/images/hero/hero_banner_1.jpg",
-    imageMobile: "/images/hero/hero_banner_1.jpg",
+    imageDesktop: getStorefrontAssetUrl("assets/hero-slider/spa.webp"),
+    imageMobile: getStorefrontAssetUrl("assets/hero-slider/spa.webp"),
   },
 ];
 
