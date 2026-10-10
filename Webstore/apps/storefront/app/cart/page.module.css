@@ -72,7 +72,7 @@
 
 .itemImage > span {
   color: #71795c;
-  font-family: Georgia, serif;
+  font-family: var(--serif);
   font-size: 3.5rem;
 }
 .itemDetails {

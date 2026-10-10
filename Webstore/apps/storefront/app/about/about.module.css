@@ -1,0 +1,194 @@
+.page {
+  background: var(--paper);
+  color: var(--ink);
+}
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1240px;
+  width: min(1240px, calc(100% - 92px));
+}
+.hero {
+  background: #eae6da;
+  overflow: hidden;
+  padding: 72px 0 64px;
+  position: relative;
+  text-align: center;
+}
+.hero::before,
+.hero::after {
+  border: 1px solid rgb(120 140 110 / 20%);
+  border-radius: 50%;
+  content: "";
+  height: 310px;
+  position: absolute;
+  top: -140px;
+  width: 310px;
+}
+.hero::before {
+  left: -110px;
+}
+.hero::after {
+  right: -110px;
+}
+.eyebrow {
+  color: var(--sage);
+  font: 800 10px var(--display);
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font: 400 clamp(44px, 5vw, 65px)/1.15 var(--serif);
+  margin: 10px 0 12px;
+}
+.hero p {
+  color: #727a6e;
+  font-size: 13px;
+  margin: auto;
+  max-width: 500px;
+}
+.aboutTop {
+  align-items: center;
+  display: grid;
+  gap: 80px;
+  grid-template-columns: 1fr 1fr;
+  padding-bottom: 90px;
+  padding-top: 90px;
+}
+.copy h2 {
+  font: 400 clamp(35px, 3.9vw, 52px)/1.2 var(--serif);
+  margin: 16px 0 18px;
+}
+.copy h2 em {
+  font-weight: 400;
+}
+.copy p {
+  color: #70776c;
+  font-size: 14px;
+  line-height: 2;
+}
+.button {
+  align-items: center;
+  background: var(--forest);
+  border: 1px solid var(--forest);
+  color: white;
+  display: inline-flex;
+  font: 700 11px var(--display);
+  gap: 20px;
+  letter-spacing: 1.25px;
+  margin-top: 1rem;
+  min-height: 48px;
+  padding: 15px 27px;
+  text-transform: uppercase;
+  transition: 0.2s;
+}
+.button:hover {
+  background: #516654;
+  border-color: #516654;
+}
+.art {
+  align-items: center;
+  background: linear-gradient(135deg, #ede1cf, #c4cbb6);
+  display: flex;
+  justify-content: center;
+  min-height: 490px;
+  overflow: hidden;
+  position: relative;
+}
+.art img {
+  height: 85%;
+  mix-blend-mode: multiply;
+  object-fit: contain;
+  width: 77%;
+}
+.art::before {
+  color: rgb(255 255 255 / 30%);
+  content: "ARGANIA";
+  font: 900 clamp(70px, 8vw, 115px) var(--display);
+  letter-spacing: 6px;
+  position: absolute;
+  right: -100px;
+  transform: rotate(-90deg);
+}
+.valuesBand {
+  background: #ecede5;
+  padding: 70px 0;
+}
+.valuesGrid {
+  display: grid;
+  gap: 55px;
+  grid-template-columns: repeat(3, 1fr);
+}
+.valuesGrid article {
+  min-width: 0;
+}
+.valueNumber {
+  color: #ad9c7b;
+  font: italic 40px var(--serif);
+}
+.valuesGrid h3 {
+  font: 400 26px var(--serif);
+  margin: 6px 0;
+}
+.valuesGrid p {
+  color: #747e72;
+  font-size: 12px;
+  line-height: 1.9;
+  margin: 0;
+}
+.promiseArt {
+  background: #efe7d7;
+}
+.textLink {
+  border-bottom: 1px solid var(--ink);
+  color: var(--ink);
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 1.2rem;
+  padding-bottom: 4px;
+}
+.textLink:hover {
+  color: var(--sage);
+}
+@media (max-width: 1160px) {
+  .container {
+    width: calc(100% - 64px);
+  }
+  .aboutTop {
+    gap: 42px;
+  }
+}
+@media (max-width: 850px) {
+  .aboutTop {
+    gap: 40px;
+  }
+  .art {
+    min-height: 400px;
+  }
+}
+@media (max-width: 590px) {
+  .container {
+    width: calc(100% - 36px);
+  }
+  .hero {
+    padding: 52px 0;
+  }
+  .aboutTop {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    padding-bottom: 50px;
+    padding-top: 50px;
+  }
+  .art {
+    min-height: 310px;
+    order: -1;
+  }
+  .valuesBand {
+    padding: 55px 0;
+  }
+  .valuesGrid {
+    gap: 25px;
+    grid-template-columns: 1fr;
+  }
+}

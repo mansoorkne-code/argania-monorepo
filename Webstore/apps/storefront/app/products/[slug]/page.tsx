@@ -6,6 +6,7 @@ import { Button } from "@repo/ui/button";
 import { ErrorState } from "@repo/ui/error-state";
 import { formatPrice, getCatalogProductBySlug } from "../../../lib/catalog";
 import { addCartItem } from "../../cart/actions";
+import { ProductGallery } from "../../components/product-gallery";
 import styles from "./product.module.css";
 
 type ProductPageProps = {
@@ -56,6 +57,9 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const price = product.variants[0]?.price;
+  const inStockVariants = product.variants.filter(
+    (variant) => variant.stockQuantity > 0,
+  );
 
   return (
     <main className={styles.page}>
@@ -73,38 +77,19 @@ export default async function ProductPage({
       </nav>
 
       <div className={styles.productLayout}>
-        <section
-          aria-label={`${product.name} images`}
-          className={styles.gallery}
-        >
-          {product.images.length ? (
-            product.images.map((image) => (
-              <div
-                aria-label={image.alt}
-                className={styles.galleryImage}
-                key={image.url}
-                role="img"
-                style={{ backgroundImage: `url(${JSON.stringify(image.url)})` }}
-              />
-            ))
-          ) : (
-            <div
-              aria-label={`${product.name} image coming soon`}
-              className={styles.galleryPlaceholder}
-              role="img"
-            >
-              <span>ARGANIA</span>
-            </div>
-          )}
-        </section>
+        <ProductGallery images={product.images} productName={product.name} />
 
         <section className={styles.productInfo}>
           <span className={styles.kicker}>
-            {product.category?.name ?? "The Argania edit"}
+            ARGANIA PROFESSIONAL /{" "}
+            {product.category?.name ?? "THE ARGANIA EDIT"}
           </span>
           <h1>{product.name}</h1>
           {price !== undefined ? (
-            <p className={styles.price}>From {formatPrice(price)}</p>
+            <p className={styles.price}>
+              {product.variants.length > 1 ? "From " : ""}
+              {formatPrice(price)}
+            </p>
           ) : null}
           {product.description ? (
             <p className={styles.description}>{product.description}</p>
@@ -120,7 +105,7 @@ export default async function ProductPage({
           ) : null}
 
           <div aria-label="Available options" className={styles.variants}>
-            <h2>Options</h2>
+            <h2>Choose your option</h2>
             {product.variants.map((variant) => (
               <div className={styles.variant} key={variant.id}>
                 <div>
@@ -163,14 +148,55 @@ export default async function ProductPage({
             ))}
           </div>
 
-          <p className={styles.comingSoon}>
-            Your cart is saved to your Argania account.
+          <p className={styles.shippingNote}>
+            Complimentary delivery on orders over ₹2,500.
           </p>
-          <Link className={styles.backLink} href="/products">
-            ← Back to the collection
-          </Link>
         </section>
       </div>
+
+      <section
+        aria-labelledby="product-details-title"
+        className={styles.detailsSection}
+      >
+        <div className={styles.detailsIntro}>
+          <span className={styles.kicker}>THE ARGANIA EDIT</span>
+          <h2 id="product-details-title">A little more about your ritual.</h2>
+          <p>
+            Thoughtful care, made to find its place in your everyday routine.
+          </p>
+        </div>
+        <div className={styles.detailsGrid}>
+          <article>
+            <span>01 / PRODUCT DETAILS</span>
+            <h3>Made for your routine</h3>
+            <p>
+              {product.description ||
+                `Explore ${product.name} from Argania Professional.`}
+            </p>
+          </article>
+          <article>
+            <span>02 / AVAILABLE OPTIONS</span>
+            <h3>Find your fit</h3>
+            <p>
+              {product.variants.map((variant) => variant.name).join(" · ") ||
+                "See available options above."}
+            </p>
+          </article>
+          <article>
+            <span>03 / AVAILABILITY</span>
+            <h3>
+              {inStockVariants.length
+                ? "Ready to be yours"
+                : "Currently unavailable"}
+            </h3>
+            <p>
+              {inStockVariants.length
+                ? `${inStockVariants.length} option${inStockVariants.length === 1 ? "" : "s"} currently available to add to your bag.`
+                : "Please check back soon for availability."}
+            </p>
+          </article>
+        </div>
+      </section>
     </main>
   );
 }

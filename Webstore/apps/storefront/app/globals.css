@@ -2,10 +2,25 @@
 
 :root {
   color-scheme: light;
-  --shell-paper: #f7f6f0;
-  --shell-ink: #292c24;
-  --shell-olive: #626b4c;
-  --shell-line: #e4e3d9;
+  --paper: #fbf9f4;
+  --cream: #f7f2e9;
+  --cream-deep: #eee7da;
+  --warm: #e7d3b8;
+  --forest: #26372e;
+  --green: #35483b;
+  --sage: #829078;
+  --sage-light: #e5e8da;
+  --ink: #2d312b;
+  --muted: #777b72;
+  --gold: #b99c6a;
+  --line: #e5e0d6;
+  --shell-paper: var(--paper);
+  --shell-ink: var(--ink);
+  --shell-olive: var(--sage);
+  --shell-line: var(--line);
+  --serif: "Playfair Display", Georgia, serif;
+  --sans: "DM Sans", Arial, sans-serif;
+  --display: "Manrope", Arial, sans-serif;
   --background: var(--shell-paper);
   --foreground: var(--shell-ink);
   --shell-header: var(--shell-paper);
@@ -18,16 +33,23 @@ html {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-geist-sans), sans-serif;
+  font: 14px/1.6 var(--sans);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  padding-top: 116px;
+  -webkit-font-smoothing: antialiased;
+  padding-top: 125px;
   overflow-x: clip;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 850px) {
   body {
-    padding-top: 108px;
+    padding-top: 110px;
+  }
+}
+
+@media (max-width: 590px) {
+  body {
+    padding-top: 98px;
   }
 }
 
@@ -40,4 +62,11 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }

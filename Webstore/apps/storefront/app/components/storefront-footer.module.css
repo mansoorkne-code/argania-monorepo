@@ -1,0 +1,118 @@
+.footer {
+  background: var(--cream);
+  color: var(--ink);
+}
+.container {
+  margin: 0 auto;
+  max-width: 1240px;
+  width: min(1240px, calc(100% - 92px));
+}
+.footerBody {
+  display: grid;
+  gap: 26px;
+  grid-template-columns: minmax(180px, 1.65fr) repeat(4, minmax(0, 1fr));
+  padding: 68px 0;
+}
+.footerIdentity img {
+  display: block;
+  height: auto;
+  max-width: 320px;
+  width: min(100%, 320px);
+}
+.footerIdentity p {
+  color: #85897e;
+  font-size: 12px;
+  margin: 24px 0 13px;
+  max-width: 230px;
+}
+.footerMotto {
+  color: #a1895b;
+  font: italic 17px var(--serif);
+}
+.footerColumn {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.footerColumn h2 {
+  font: 700 11px var(--display);
+  letter-spacing: 1.2px;
+  margin: 1px 0 9px;
+  text-transform: uppercase;
+}
+.footerColumn a,
+.footerColumn > span {
+  color: #757b70;
+  font-size: 12px;
+}
+.footerColumn a:hover {
+  color: var(--forest);
+  text-decoration: underline;
+}
+.socialLink {
+  align-items: center;
+  color: #4b664a !important;
+  display: flex;
+  font-weight: 600;
+  gap: 9px;
+}
+.socialLink svg {
+  flex: none;
+  height: 20px;
+  width: 20px;
+}
+.b2bLink {
+  background: rgb(249 248 244 / 58%);
+  border: 1px solid rgb(119 135 105 / 35%);
+  color: #435f45 !important;
+  font-weight: 700;
+  margin: 6px 0 3px;
+  padding: 10px 13px;
+}
+.b2bLink:hover {
+  background: #ecf0e5;
+  text-decoration: none !important;
+}
+.footerBottom {
+  border-top: 1px solid var(--line);
+  color: #85897e;
+  display: flex;
+  font-size: 10px;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 19px 0 25px;
+}
+@media (max-width: 1100px) {
+  .footerBody {
+    gap: 30px;
+    grid-template-columns: 1.6fr repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .container {
+    width: min(100% - 40px, 1240px);
+  }
+  .footerBody {
+    padding: 43px 0;
+  }
+}
+@media (max-width: 590px) {
+  .footerBody {
+    gap: 27px 19px;
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .footerIdentity {
+    grid-column: 1/-1;
+  }
+  .footerColumn:last-child {
+    grid-column: 1/-1;
+  }
+  .socialLink span {
+    font-size: 11px;
+  }
+  .footerBottom {
+    flex-direction: column;
+    gap: 3px;
+  }
+}

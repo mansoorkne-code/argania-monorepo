@@ -173,6 +173,7 @@ export async function getCatalogProducts(options?: {
   categoryId?: string;
   search?: string;
   page?: number;
+  availableOnly?: boolean;
 }): Promise<{ products: CatalogProduct[]; totalCount: number }> {
   const supabase = await createClient();
   let query = supabase
@@ -184,6 +185,8 @@ export async function getCatalogProducts(options?: {
 
   if (options?.categoryId) query = query.eq("category_id", options.categoryId);
   if (options?.search) query = query.ilike("name", `%${options.search}%`);
+  if (options?.availableOnly)
+    query = query.gt("product_variants.stock_quantity", 0);
 
   const page = Math.max(1, options?.page ?? 1);
   const start = (page - 1) * catalogPageSize;
