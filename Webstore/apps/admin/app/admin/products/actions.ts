@@ -55,6 +55,14 @@ function databaseState(error: {
       },
     };
   }
+  if (error.message.includes("category_parent_unavailable")) {
+    return {
+      fieldErrors: {
+        categoryId:
+          "Active products need an active category. Choose an active category or save this product as a draft.",
+      },
+    };
+  }
   if (error.code === "23503") {
     return { fieldErrors: { categoryId: "Choose an existing category." } };
   }
