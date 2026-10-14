@@ -31,39 +31,10 @@ export function StorefrontFooter() {
           <h2>About Argania</h2>
           <Link href="/about">Our philosophy</Link>
           <a href="mailto:argania.professional@gmail.com">Contact us</a>
-          <Link href="/account">Your wishlist</Link>
-          <a
-            href="https://www.arganiaprofessional.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Current store ↗
-          </a>
         </nav>
 
         <nav aria-label="Policies and support" className={styles.footerColumn}>
           <h2>Policies &amp; Support</h2>
-          <a
-            href="https://www.arganiaprofessional.com/policies/terms-of-service"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Terms &amp; Conditions
-          </a>
-          <a
-            href="https://www.arganiaprofessional.com/policies/privacy-policy"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Our Policy
-          </a>
-          <a
-            href="https://www.arganiaprofessional.com/policies/privacy-policy"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Live Privacy Policy ↗
-          </a>
           <a href="mailto:argania.professional@gmail.com">Customer support</a>
         </nav>
 
