@@ -72,9 +72,13 @@ export default async function ProductsPage({
 
   try {
     const categories = await getCatalogCategories();
-    const selectedCategory = categories.find(
-      (category) => category.slug === categorySlug,
-    );
+    const selectedCategory =
+      categories.find((category) => category.slug === categorySlug) ??
+      categories.find(
+        (category) =>
+          category.slug.replaceAll("-", "").toLowerCase() ===
+          categorySlug.replaceAll("-", "").toLowerCase(),
+      );
     const result =
       categorySlug && !selectedCategory
         ? { products: [], totalCount: 0 }

@@ -8,6 +8,8 @@ export type AdminCategory = CategoryNode & {
   description: string | null;
   productCount: number;
   activeProductCount: number;
+  image_path: string | null;
+  image_alt: string | null;
 };
 
 export async function getCategoryAccess() {
@@ -45,6 +47,8 @@ export async function getAdminCategories(
         description: string | null;
         product_count: number;
         active_product_count: number;
+        image_path: string | null;
+        image_alt: string | null;
       },
     ) => ({
       ...row,

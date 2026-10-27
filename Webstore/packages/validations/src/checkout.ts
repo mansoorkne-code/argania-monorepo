@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { cartItemInputSchema, variantIdSchema } from "./cart";
+import { cartItemInputSchema, variantIdSchema } from "./cart.js";
 
 export const couponCodeSchema = z
   .string()

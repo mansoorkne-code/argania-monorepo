@@ -1,11 +1,8 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [],
+    "types": ["vite/client", "node"],
     "strictNullChecks": true
   },
   "include": [
@@ -13,7 +10,7 @@
     "**/*.tsx",
     "next-env.d.ts",
     "next.config.js",
-    ".next/types/**/*.ts"
+    ".cloudflare/types"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", ".next"]
 }

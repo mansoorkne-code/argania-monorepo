@@ -30,6 +30,7 @@ export default async function NewCategoryPage() {
         <div>
           <Link href="/admin/categories">Categories</Link>
           <h2>Create category</h2>
+          <p>Create the category first; its image uploader opens next.</p>
         </div>
       </header>
       <CategoryForm action={createCategoryAction} categories={categories} />

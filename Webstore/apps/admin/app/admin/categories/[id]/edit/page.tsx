@@ -7,6 +7,7 @@ import {
   requireCategoryAdmin,
   getAdminCategories,
 } from "../../../../../lib/categories";
+import { CategoryImageManager } from "../../image-manager";
 import { CategoryForm } from "../../category-form";
 import { updateCategoryAction } from "../../actions";
 import styles from "../../categories.module.css";
@@ -14,11 +15,14 @@ import styles from "../../categories.module.css";
 export const metadata: Metadata = { title: "Edit category" };
 export default async function EditCategoryPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ notice?: string }>;
 }) {
   const supabase = await requireCategoryAdmin();
   const { id } = await params;
+  const { notice } = await searchParams;
   if (!categoryIdSchema.safeParse(id).success) notFound();
   let categories;
   try {
@@ -45,11 +49,17 @@ export default async function EditCategoryPage({
           </p>
         </div>
       </header>
+      {notice === "created" && (
+        <p className={styles.notice} role="status">
+          Category created. Add its storefront image below.
+        </p>
+      )}
       <CategoryForm
         action={updateCategoryAction.bind(null, id)}
         categories={categories}
         category={category}
       />
+      <CategoryImageManager category={category} />
     </section>
   );
 }

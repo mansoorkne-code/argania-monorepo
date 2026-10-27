@@ -33,3 +33,29 @@ permissions. Existing catalog reads and image metadata are preserved.
 Run unit tests with `node --experimental-strip-types --test apps/admin/tests/categories.test.mjs`
 from `Webstore`. Database tests are in `supabase/tests/category-management.sql`; run
 them on a disposable migrated database. The tests use transactions and roll back.
+
+## Cover images
+
+Apply `20261011110000_category_images.sql` after the category-management migration
+and the existing product-image-storage migration. Create redirects to the editor,
+where an admin can upload one category cover, edit its alt text, replace it, or
+remove it. Managers see list thumbnails without upload controls. The storefront
+uses the same `image_path` and the new `image_alt` value.
+
+Files are uploaded directly from the browser to Supabase Storage's public
+`product-images` bucket with an authenticated client, using
+`categories/<category-id>/<random-uuid>.<extension>`. JPG, PNG, WebP and AVIF are
+supported up to 10 MB. The bucket enforces file size/MIME limits; the database
+checks object existence and metadata before associating a new upload. No image
+binary or service-role credential is stored in the application database/client.
+If using a custom `NEXT_PUBLIC_SUPABASE_PRODUCT_IMAGES_BUCKET`, adjust the
+storage policies and bucket configuration in the migration to match.
+
+Replacements and removals compare the expected current path under the category
+transaction lock, rejecting stale edits. Save the new association (or clear it)
+before deleting the old file, so storage failures do not break the current image.
+Cleanup checks all category and product-image references, and only deletes files
+under this category's managed upload path. Shared `assets/` paths and external
+reference URLs are preserved. Failed file cleanup can be retried in the editor;
+ambiguous save/network failures keep uploaded files until their association is
+verified. Categories with a cover must have it removed before category deletion.

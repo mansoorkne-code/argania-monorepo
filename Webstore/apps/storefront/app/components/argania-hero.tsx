@@ -1,145 +1,195 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import styles from "./argania-hero.module.css";
 import { getStorefrontAssetUrl } from "../../lib/storefront-assets";
-
-interface Slide {
-  id: number;
-  title: string;
-  link: string;
-  imageDesktop: string;
-  imageMobile: string;
-}
-
-const slides: Slide[] = [
+const slides = [
   {
-    id: 1,
-    title: "Pure Organic Argan Oil",
-    link: "/products",
-    imageDesktop: getStorefrontAssetUrl("assets/hero-slider/aloe.webp"),
-    imageMobile: getStorefrontAssetUrl("assets/hero-slider/aloe.webp"),
+    file: "aloe",
+    name: "Aloe Vera Gel",
+    kind: "SKINCARE",
+    action: "Explore Aloe Vera Gel",
+    query: "Aloe",
+    alt: "Argania Professional Aloe Vera Gel botanical skincare banner",
   },
   {
-    id: 2,
-    title: "Hydrating Serums Collection",
-    link: "/products",
-    imageDesktop: getStorefrontAssetUrl("assets/hero-slider/serum.webp"),
-    imageMobile: getStorefrontAssetUrl("assets/hero-slider/serum.webp"),
+    file: "night",
+    name: "Intensive Night Cream",
+    kind: "NIGHT CARE",
+    action: "Shop Night Cream",
+    query: "Night Cream",
+    alt: "Argania Professional Intensive Night Cream campaign in a lavender evening setting",
   },
   {
-    id: 3,
-    title: "Luxury Argan Gift Box",
-    link: "/products",
-    imageDesktop: getStorefrontAssetUrl("assets/hero-slider/day.webp"),
-    imageMobile: getStorefrontAssetUrl("assets/hero-slider/day.webp"),
+    file: "day",
+    name: "Skin Renewing Day Cream",
+    kind: "DAY CARE",
+    action: "Shop Day Cream",
+    query: "Day Cream",
+    alt: "Argania Professional Skin Renewing Day Cream campaign with pomegranate",
   },
   {
-    id: 4,
-    title: "Nourishing Hair Care Ritual",
-    link: "/products",
-    imageDesktop: getStorefrontAssetUrl("assets/hero-slider/spa.webp"),
-    imageMobile: getStorefrontAssetUrl("assets/hero-slider/spa.webp"),
+    file: "dtan",
+    name: "D-Tan Treatment",
+    kind: "SKINCARE",
+    action: "Explore Skincare",
+    query: "D-Tan",
+    alt: "Argania Professional D-Tan treatment skincare campaign",
+  },
+  {
+    file: "spa",
+    name: "Instant Repair Hair Spa",
+    kind: "HAIRCARE",
+    action: "Shop Hair Spa",
+    query: "Hair Spa",
+    alt: "Argania Professional salon-like Hair Spa campaign",
+  },
+  {
+    file: "serum",
+    name: "Glow Detoxic One Tone Serum",
+    kind: "SERUM",
+    action: "Shop Glow Detoxic",
+    query: "Serum",
+    alt: "Argania Professional Glow Detoxic serum beach skincare campaign",
   },
 ];
-
+const href = (query: string) => `/products?q=${encodeURIComponent(query)}`;
 export function ArganiaHero() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [announcement, setAnnouncement] = useState("");
+  const touch = useRef<[number, number]>([0, 0]);
   useEffect(() => {
-    if (isPaused) return;
-
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, [isPaused]);
-
-  const handlePrev = () => {
-    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let timer: ReturnType<typeof setInterval> | undefined;
+    const update = () => {
+      clearInterval(timer);
+      if (!paused && !media.matches && !document.hidden)
+        timer = setInterval(
+          () => setIndex((current) => (current + 1) % slides.length),
+          6000,
+        );
+    };
+    update();
+    document.addEventListener("visibilitychange", update);
+    media.addEventListener("change", update);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", update);
+      media.removeEventListener("change", update);
+    };
+  }, [paused, index]);
+  const change = (target: number) => {
+    const next = (target + slides.length) % slides.length;
+    setIndex(next);
+    setAnnouncement(
+      `Banner ${next + 1} of ${slides.length}: ${slides[next]!.name}`,
+    );
   };
-
-  const handleNext = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
-
+  const current = slides[index]!;
   return (
-    <section 
-      aria-label="Argania Hero Banners" 
-      className={styles.heroSection}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+    <section
+      className="ap-hero-slider"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Argania featured campaigns"
+      tabIndex={-1}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget))
+          setPaused(false);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+          event.preventDefault();
+          change(index + (event.key === "ArrowRight" ? 1 : -1));
+        }
+      }}
+      onTouchStart={(event) => {
+        touch.current = [event.touches[0]!.clientX, event.touches[0]!.clientY];
+      }}
+      onTouchEnd={(event) => {
+        const point = event.changedTouches[0];
+        if (!point) return;
+        const dx = point.clientX - touch.current[0],
+          dy = point.clientY - touch.current[1];
+        if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.2)
+          change(index + (dx < 0 ? 1 : -1));
+      }}
     >
-      <div className={styles.carouselContainer}>
-        {slides.map((slide, index) => {
-          const isActive = index === currentSlide;
-          return (
-            <Link
-              key={slide.id}
-              href={slide.link}
-              className={`${styles.slide} ${isActive ? styles.activeSlide : ""}`}
-              aria-hidden={!isActive}
-              aria-label={slide.title}
-            >
-              <picture className={styles.imageWrapper}>
-                <source media="(max-width: 768px)" srcSet={slide.imageMobile} />
-                <img
-                  src={slide.imageDesktop}
-                  alt={slide.title}
-                  className={styles.slideImage}
-                  loading={index === 0 ? "eager" : "lazy"}
-                />
-              </picture>
-            </Link>
-          );
-        })}
-
-        {/* Navigation Arrows */}
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            handlePrev();
-          }}
-          aria-label="Previous Slide"
-          className={`${styles.navButton} ${styles.prevButton}`}
-          type="button"
-        >
-          ‹
-        </button>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            handleNext();
-          }}
-          aria-label="Next Slide"
-          className={`${styles.navButton} ${styles.nextButton}`}
-          type="button"
-        >
-          ›
-        </button>
-
-        {/* Pagination Dots */}
-        <div className={styles.dotsContainer}>
-          {slides.map((slide, index) => (
-            <button
-              key={slide.id}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setCurrentSlide(index);
-              }}
-              aria-label={`Go to slide ${index + 1}`}
-              className={`${styles.dot} ${index === currentSlide ? styles.activeDot : ""}`}
-              type="button"
+      <div className="ap-hero-stage">
+        {slides.map((slide, i) => (
+          <Link
+            key={slide.file}
+            href={href(slide.query)}
+            className={`ap-hero-slide${i === index ? " is-active" : ""}`}
+            aria-label={slide.action}
+            aria-hidden={i !== index}
+            tabIndex={i === index ? 0 : -1}
+          >
+            <img
+              src={getStorefrontAssetUrl(
+                `assets/hero-slider/${slide.file}.webp`,
+              )}
+              alt={slide.alt}
+              loading={i === 0 ? "eager" : "lazy"}
+              fetchPriority={i === 0 ? "high" : undefined}
+              decoding="async"
             />
+          </Link>
+        ))}
+        <button
+          className="ap-hero-arrow ap-hero-prev"
+          type="button"
+          aria-label="Previous banner"
+          onClick={() => change(index - 1)}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m15 5-7 7 7 7" />
+          </svg>
+        </button>
+        <button
+          className="ap-hero-arrow ap-hero-next"
+          type="button"
+          aria-label="Next banner"
+          onClick={() => change(index + 1)}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m9 5 7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+      <div className="ap-hero-bar">
+        <div className="ap-hero-label">
+          <span className="ap-hero-eyebrow">{current.kind} · FEATURED</span>
+          <strong>{current.name}</strong>
+        </div>
+        <div
+          className="ap-hero-dots"
+          role="group"
+          aria-label="Choose hero banner"
+        >
+          {slides.map((slide, i) => (
+            <button
+              key={slide.file}
+              className={`ap-hero-dot${i === index ? " is-active" : ""}`}
+              type="button"
+              aria-label={`Show banner ${i + 1}: ${slide.name}`}
+              aria-pressed={i === index}
+              onClick={() => change(i)}
+            >
+              <span />
+            </button>
           ))}
         </div>
+        <Link className="ap-hero-shop" href={href(current.query)}>
+          {current.action} <span aria-hidden="true">↗</span>
+        </Link>
       </div>
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {announcement}
+      </p>
     </section>
   );
 }

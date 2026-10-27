@@ -5,6 +5,26 @@ import { redirect } from "next/navigation";
 import { quantitySchema, variantIdSchema } from "@webstore/validations/cart";
 import { getOrCreateCart } from "../../lib/cart";
 import { createClient } from "../../lib/supabase/server";
+import { getCartSnapshot } from "../../lib/cart-snapshot";
+import { cartErrors, type CartMutationResult } from "../../lib/cart-summary";
+
+export async function loadBag() {
+  return getCartSnapshot();
+}
+
+async function finishMutation(
+  drawer: boolean,
+  path: string,
+  error?: string,
+): Promise<CartMutationResult> {
+  if (!error) {
+    revalidatePath("/cart");
+    revalidatePath("/", "layout");
+  }
+  if (!drawer) redirect(path);
+  if (error) return { ok: false, error: cartErrors[error] ?? cartErrors.save! };
+  return { ok: true, cart: await getCartSnapshot() };
+}
 
 type AvailableVariant = {
   id: string;
@@ -22,7 +42,8 @@ function logCartFailure(action: string, error: unknown) {
       message?: unknown;
     };
     console.error(`[cart:${action}] Database operation failed`, {
-      code: typeof databaseError.code === "string" ? databaseError.code : undefined,
+      code:
+        typeof databaseError.code === "string" ? databaseError.code : undefined,
       message:
         typeof databaseError.message === "string"
           ? databaseError.message
@@ -73,12 +94,13 @@ async function getAvailableVariant(
   return variant;
 }
 
-export async function addCartItem(formData: FormData) {
+async function addItem(formData: FormData, drawer: boolean) {
   const variantId = readVariantId(formData);
   const quantity = quantitySchema.safeParse(Number(formData.get("quantity")));
   const slugValue = formData.get("productSlug");
   const slug = typeof slugValue === "string" ? slugValue : "";
-  if (!variantId || !quantity.success) redirect("/cart?error=invalid");
+  if (!variantId || !quantity.success)
+    return finishMutation(drawer, "/cart?error=invalid", "invalid");
 
   const productPath = slug ? `/products/${encodeURIComponent(slug)}` : "/cart";
   const { supabase, userId } = await requireCustomer(productPath);
@@ -97,7 +119,9 @@ export async function addCartItem(formData: FormData) {
         .eq("variant_id", variantId)
         .maybeSingle();
       if (existingError) {
-        throw new Error("Unable to read the cart item.", { cause: existingError });
+        throw new Error("Unable to read the cart item.", {
+          cause: existingError,
+        });
       }
 
       const nextQuantity = (existing?.quantity ?? 0) + quantity.data;
@@ -124,13 +148,16 @@ export async function addCartItem(formData: FormData) {
     logCartFailure("add", error);
     failure = "save";
   }
-  if (failure) redirect(`${productPath}?cart_error=${failure}`);
-
-  revalidatePath("/cart");
-  redirect("/cart?notice=added");
+  if (failure)
+    return finishMutation(
+      drawer,
+      `${productPath}?cart_error=${failure}`,
+      failure,
+    );
+  return finishMutation(drawer, "/cart?notice=added");
 }
 
-export async function updateCartItem(formData: FormData) {
+async function updateItem(formData: FormData, drawer: boolean) {
   const itemIdValue = formData.get("itemId");
   const itemId =
     typeof itemIdValue === "string" &&
@@ -138,7 +165,8 @@ export async function updateCartItem(formData: FormData) {
       ? itemIdValue
       : null;
   const quantity = quantitySchema.safeParse(Number(formData.get("quantity")));
-  if (!itemId || !quantity.success) redirect("/cart?error=invalid");
+  if (!itemId || !quantity.success)
+    return finishMutation(drawer, "/cart?error=invalid", "invalid");
 
   const { supabase, userId } = await requireCustomer("/cart");
   let failure: string | null = null;
@@ -170,20 +198,18 @@ export async function updateCartItem(formData: FormData) {
   } catch {
     failure = "save";
   }
-  if (failure) redirect(`/cart?error=${failure}`);
-
-  revalidatePath("/cart");
-  redirect("/cart?notice=updated");
+  if (failure) return finishMutation(drawer, `/cart?error=${failure}`, failure);
+  return finishMutation(drawer, "/cart?notice=updated");
 }
 
-export async function removeCartItem(formData: FormData) {
+async function removeItem(formData: FormData, drawer: boolean) {
   const itemIdValue = formData.get("itemId");
   const itemId =
     typeof itemIdValue === "string" &&
     variantIdSchema.safeParse(itemIdValue).success
       ? itemIdValue
       : null;
-  if (!itemId) redirect("/cart?error=invalid");
+  if (!itemId) return finishMutation(drawer, "/cart?error=invalid", "invalid");
 
   const { supabase, userId } = await requireCustomer("/cart");
   let failure = false;
@@ -198,8 +224,25 @@ export async function removeCartItem(formData: FormData) {
   } catch {
     failure = true;
   }
-  if (failure) redirect("/cart?error=save");
+  if (failure) return finishMutation(drawer, "/cart?error=save", "save");
+  return finishMutation(drawer, "/cart?notice=removed");
+}
 
-  revalidatePath("/cart");
-  redirect("/cart?notice=removed");
+export async function addCartItem(formData: FormData): Promise<void> {
+  await addItem(formData, false);
+}
+export async function updateCartItem(formData: FormData): Promise<void> {
+  await updateItem(formData, false);
+}
+export async function removeCartItem(formData: FormData): Promise<void> {
+  await removeItem(formData, false);
+}
+export async function addToBag(formData: FormData) {
+  return addItem(formData, true);
+}
+export async function updateBagItem(formData: FormData) {
+  return updateItem(formData, true);
+}
+export async function removeBagItem(formData: FormData) {
+  return removeItem(formData, true);
 }

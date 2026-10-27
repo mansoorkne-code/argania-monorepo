@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { CatalogImage } from "../../lib/catalog";
+import { ProductIcon } from "./product-icon";
 import styles from "../products/[slug]/product.module.css";
 
 type ProductGalleryProps = {
@@ -11,59 +12,41 @@ type ProductGalleryProps = {
 
 export function ProductGallery({ images, productName }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeImage = images[activeIndex];
+  const dialog = useRef<HTMLDialogElement>(null);
+  const previousOverflow = useRef<string | null>(null);
+  const titleId = useId();
+  const index = images.length ? activeIndex % images.length : 0;
+  const activeImage = images[index];
+  const move = (direction: number) =>
+    setActiveIndex((index + direction + images.length) % images.length);
+
+  function restoreScrolling() {
+    if (previousOverflow.current !== null) {
+      document.body.style.overflow = previousOverflow.current;
+      previousOverflow.current = null;
+    }
+  }
+
+  function openImage() {
+    if (!dialog.current || dialog.current.open) return;
+    previousOverflow.current = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    dialog.current.showModal();
+  }
+
+  useEffect(() => restoreScrolling, []);
 
   return (
     <section aria-label={`${productName} images`} className={styles.gallery}>
-      <div className={styles.primaryImage}>
-        {activeImage ? (
-          <img alt={activeImage.alt} src={activeImage.url} />
-        ) : (
-          <div aria-label={`${productName} image coming soon`} role="img">
-            <span>ARGANIA</span>
-          </div>
-        )}
-        {images.length > 1 ? (
-          <>
-            <button
-              aria-label="Previous product image"
-              className={`${styles.galleryControl} ${styles.previous}`}
-              onClick={() =>
-                setActiveIndex(
-                  (index) => (index - 1 + images.length) % images.length,
-                )
-              }
-              type="button"
-            >
-              ‹
-            </button>
-            <button
-              aria-label="Next product image"
-              className={`${styles.galleryControl} ${styles.next}`}
-              onClick={() =>
-                setActiveIndex((index) => (index + 1) % images.length)
-              }
-              type="button"
-            >
-              ›
-            </button>
-            <span className={styles.imageCount}>
-              {activeIndex + 1} / {images.length}
-            </span>
-          </>
-        ) : null}
-      </div>
       {images.length > 1 ? (
-        <div aria-label="Choose product image" className={styles.thumbnails}>
-          {images.map((image, index) => (
+        <div aria-label="Choose product image" className={styles.thumbs}>
+          {images.map((image, imageIndex) => (
             <button
-              aria-current={activeIndex === index ? "true" : undefined}
-              aria-label={`View product image ${index + 1}`}
-              className={
-                activeIndex === index ? styles.activeThumbnail : undefined
-              }
-              key={`${image.url}-${index}`}
-              onClick={() => setActiveIndex(index)}
+              aria-label={`View product image ${imageIndex + 1}`}
+              aria-pressed={index === imageIndex}
+              className={`${styles.thumb} ${index === imageIndex ? styles.activeThumbnail : ""}`}
+              key={`${image.url}-${imageIndex}`}
+              onClick={() => setActiveIndex(imageIndex)}
               type="button"
             >
               <img alt="" loading="lazy" src={image.url} />
@@ -71,9 +54,93 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
           ))}
         </div>
       ) : null}
-      <p className={styles.galleryCaption}>
-        Product photos first, followed by details and everyday inspiration.
-      </p>
+      <div
+        className={`${styles.stage} ${images.length < 2 ? styles.singleImage : ""}`}
+      >
+        <div className={styles.mainFrame}>
+          {activeImage ? (
+            <img
+              alt={activeImage.alt || productName}
+              className={styles.mainPhoto}
+              src={activeImage.url}
+              fetchPriority="high"
+            />
+          ) : (
+            <div
+              className={styles.imagePlaceholder}
+              role="img"
+              aria-label={`${productName} image coming soon`}
+            >
+              <span>A</span>
+              <small>ARGANIA PROFESSIONAL</small>
+            </div>
+          )}
+          <div className={styles.imageMeta}>
+            <span className={styles.badge}>THE ARGANIA EDIT</span>
+            {images.length > 0 ? (
+              <span className={styles.imageCount} aria-live="polite">
+                {index + 1} / {images.length}
+              </span>
+            ) : null}
+          </div>
+          {images.length > 1 ? (
+            <div className={styles.imageNav}>
+              <button
+                aria-label="Previous product image"
+                onClick={() => move(-1)}
+                type="button"
+              >
+                ←
+              </button>
+              <button
+                aria-label="Next product image"
+                onClick={() => move(1)}
+                type="button"
+              >
+                →
+              </button>
+            </div>
+          ) : null}
+          {activeImage ? (
+            <button
+              className={styles.zoom}
+              aria-label="Enlarge product image"
+              onClick={openImage}
+              type="button"
+            >
+              <ProductIcon name="zoom" />
+            </button>
+          ) : null}
+        </div>
+        <p className={styles.imageCaption}>
+          {activeImage
+            ? "A closer look at your everyday ritual"
+            : "Product photography coming soon"}
+        </p>
+      </div>
+      <dialog
+        aria-labelledby={titleId}
+        className={styles.photoModal}
+        onClose={restoreScrolling}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) dialog.current?.close();
+        }}
+        ref={dialog}
+      >
+        <h2 className="sr-only" id={titleId}>
+          {productName} — enlarged image
+        </h2>
+        <button
+          aria-label="Close enlarged image"
+          onClick={() => dialog.current?.close()}
+          type="button"
+        >
+          <ProductIcon name="close" />
+        </button>
+        {activeImage ? (
+          <img alt={activeImage.alt || productName} src={activeImage.url} />
+        ) : null}
+      </dialog>
     </section>
   );
 }

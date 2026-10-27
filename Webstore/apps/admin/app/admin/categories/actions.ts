@@ -38,6 +38,11 @@ function databaseError(error: {
           "Choose an existing, unarchived parent. Active categories need an active parent.",
       },
     };
+  if (error.message.includes("category_image_dependency"))
+    return {
+      formError:
+        "Remove this category’s image in the editor before deleting the category.",
+    };
   if (error.message.includes("category_dependencies"))
     return {
       formError:
@@ -81,7 +86,7 @@ async function saveCategory(
     return { fieldErrors };
   }
   const input = parsed.data;
-  const { error } = await supabase.rpc("admin_save_category", {
+  const { data: savedId, error } = await supabase.rpc("admin_save_category", {
     p_id: id,
     p_name: input.name,
     p_slug: input.slug,
@@ -91,7 +96,11 @@ async function saveCategory(
   });
   if (error) return databaseError(error);
   refreshCategories();
-  redirect(`/admin/categories?notice=${id ? "updated" : "created"}`);
+  redirect(
+    id
+      ? "/admin/categories?notice=updated"
+      : `/admin/categories/${savedId}/edit?notice=created`,
+  );
 }
 
 export async function createCategoryAction(

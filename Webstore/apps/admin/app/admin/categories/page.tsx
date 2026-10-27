@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
+import { getSupabasePublicConfig } from "../../../lib/supabase/config";
+import { categoryImageUrl } from "../../../lib/category-images";
 import { ErrorState } from "@repo/ui/error-state";
 import { getCategoryAccess, getAdminCategories } from "../../../lib/categories";
 import { flattenCategories } from "../../../lib/category-tree";
@@ -87,7 +90,9 @@ export default async function CategoriesPage({
                   category.activeProductCount === 0 &&
                   children.every((child) => child.status === "archived");
                 const canDelete =
-                  category.productCount === 0 && children.length === 0;
+                  category.productCount === 0 &&
+                  children.length === 0 &&
+                  !category.image_path;
                 return (
                   <tr key={category.id}>
                     <th scope="row">
@@ -97,6 +102,19 @@ export default async function CategoriesPage({
                         }}
                       >
                         <strong>
+                          {category.image_path && (
+                            <Image
+                              className={styles.thumbnail}
+                              src={categoryImageUrl(
+                                getSupabasePublicConfig().url,
+                                category.image_path,
+                              )}
+                              alt={category.image_alt || category.name}
+                              width={48}
+                              height={48}
+                              unoptimized
+                            />
+                          )}
                           {depth > 0 && <span aria-hidden="true">↳ </span>}
                           {category.name}
                         </strong>
@@ -140,7 +158,8 @@ export default async function CategoriesPage({
                           {(!canArchive || !canDelete) && (
                             <small>
                               Archive: resolve active products and unarchived
-                              children. Delete: remove all references.
+                              children. Delete: remove all references and the
+                              category image.
                             </small>
                           )}
                         </>

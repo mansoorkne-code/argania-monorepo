@@ -1,12 +1,12 @@
 # Webstore
 
 A modular, production-oriented ecommerce platform built with pnpm, Turborepo,
-Next.js, and Supabase.
+Vinext, Vite, and Supabase.
 
 ## Workspace layout
 
-- `apps/storefront` — customer-facing ecommerce application (port 3000)
-- `apps/admin` — administrative dashboard (port 3001)
+- `apps/storefront` — customer-facing ecommerce application on Vinext/Vite (port 3000)
+- `apps/admin` — administrative dashboard on Vinext/Vite (port 3001)
 - `packages/ui` — shared presentational UI primitives
 - `packages/eslint-config` — shared ESLint configuration
 - `packages/typescript-config` — shared TypeScript configuration

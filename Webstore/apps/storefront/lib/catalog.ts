@@ -6,6 +6,7 @@ export interface CatalogCategory {
   slug: string;
   description: string | null;
   imagePath: string | null;
+  imageAlt: string | null;
   imageUrl: string | null;
 }
 
@@ -17,6 +18,7 @@ export interface CatalogVariant {
   compareAtPrice: number | null;
   stockQuantity: number;
   attributes: Record<string, string>;
+  priceNeedsConfirmation?: boolean;
 }
 
 export interface CatalogImage {
@@ -94,6 +96,12 @@ function mapProduct(row: ProductRow): CatalogProduct {
         ? null
         : Number(variant.compare_at_price),
     stockQuantity: variant.stock_quantity,
+    priceNeedsConfirmation:
+      Number(variant.price) === 0 &&
+      typeof variant.attributes?.catalogue === "object" &&
+      variant.attributes.catalogue !== null &&
+      "price_confirmation_required" in variant.attributes.catalogue &&
+      variant.attributes.catalogue.price_confirmation_required === true,
     attributes: Object.fromEntries(
       Object.entries(variant.attributes ?? {}).filter(
         (entry): entry is [string, string] => typeof entry[1] === "string",
@@ -149,12 +157,23 @@ const productSelect = `
 
 export async function getCatalogCategories(): Promise<CatalogCategory[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from("categories")
-    .select("id, name, slug, description, image_path")
+    .select("id, name, slug, description, image_path, image_alt")
     .eq("status", "active")
     .order("name");
-
+  // Support a rolling deployment before the category-image migration lands.
+  if (error?.code === "42703") {
+    const legacy = await supabase
+      .from("categories")
+      .select("id, name, slug, description, image_path")
+      .eq("status", "active")
+      .order("name");
+    data =
+      legacy.data?.map((category) => ({ ...category, image_alt: null })) ??
+      null;
+    error = legacy.error;
+  }
   if (error)
     throw new Error("Unable to load catalog categories.", { cause: error });
   return (data ?? []).map((category) => ({
@@ -163,6 +182,7 @@ export async function getCatalogCategories(): Promise<CatalogCategory[]> {
     slug: category.slug,
     description: category.description,
     imagePath: category.image_path,
+    imageAlt: category.image_alt,
     imageUrl: category.image_path
       ? getProductImageUrl(category.image_path) || null
       : null,
@@ -218,10 +238,4 @@ export async function getCatalogProductBySlug(
   return data ? mapProduct(data as unknown as ProductRow) : null;
 }
 
-export function formatPrice(amount: number) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 2,
-  }).format(amount);
-}
+export { formatPrice } from "./money";

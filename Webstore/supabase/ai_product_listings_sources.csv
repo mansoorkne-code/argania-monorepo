@@ -1,0 +1,26 @@
+listing,product_name,handle,category,size,price_inr,new_internal_sku,legacy_sku,source_folder,local_asset_folder
+1,Glow Detoxic One Tone Serum,one-tone-serum,skin-care,30ml,415,ARG-CAT-ONE-TONE-SERUM,ARG-GD-ONE-TONE-SERUM-STD,One tone serum,assets/products/one-tone-serum/
+2,Skin Renewing Day Cream,day-cream,skin-care,50g,299,ARG-CAT-DAY-CREAM,ARG-SKIN-RENEWING-DAY-CREAM-50,Day Cream (Ai),assets/products/day-cream/
+3,Instant Repair Hair Spa,hair-spa,hair-care,500g,650,ARG-CAT-HAIR-SPA,,,assets/products/hair-spa/
+4,Intensive Night Cream,night-cream,skin-care,50g,299,ARG-CAT-NIGHT-CREAM,ARG-INTENSIVE-NIGHT-CREAM-50,Night Cream,assets/products/night-cream/
+5,Kera Rescue Keratin Shampoo,kera-rescue-shampoo,hair-care,250ml,525,ARG-CAT-KERA-RESCUE-SHAMPOO,ARG-KERA-RESCUE-SHAMPOO-250,Kera Rescue shampoo ,assets/products/kera-rescue-shampoo/
+6,Kera Rescue Keratin Conditioner,kera-rescue-conditioner,hair-care,250ml,550,ARG-CAT-KERA-RESCUE-CONDITIONER,ARG-KERA-RESCUE-CONDITIONER-250,Kera Conditioner 250ml,assets/products/kera-rescue-conditioner/
+7,Instant Repair Shampoo — 1L,instant-repair-shampoo,hair-care,1L,600,ARG-CAT-INSTANT-REPAIR-SHAMPOO,,,assets/products/instant-repair-shampoo/
+8,Rose Water Daily Glow,rose-water,skin-care,200ml,150,ARG-CAT-ROSE-WATER,ARG-ROSE-WATER-200,Rose Water 200ml,assets/products/rose-water/
+9,Green Apple Toner Daily Glow,green-apple-toner,skin-care,500ml,250,ARG-CAT-GREEN-APPLE-TONER,ARG-GREEN-APPLE-SKIN-TONER-500,Green Apple Toner ,assets/products/green-apple-toner/
+10,Glow Detoxic Illuminating Scrub,glow-scrub,skin-care,200g,695,ARG-CAT-GLOW-SCRUB,ARG-GD-SKIN-ILLUMINATING-SCRUB-STD,Skin Illuminating Scrub (Ai),assets/products/glow-scrub/
+11,Glow Detoxic Massage Cream,glow-massage-cream,skin-care,200g,695,ARG-CAT-GLOW-MASSAGE-CREAM,ARG-GD-MASSAGE-CREAM-STD,Massage Cream (Ai),assets/products/glow-massage-cream/
+12,Instant Repair Conditioner,instant-repair-conditioner,hair-care,500ml,370,ARG-CAT-INSTANT-REPAIR-CONDITIONER,ARG-INSTANT-REPAIR-RESTORATIVE-CONDITIONER-500,Instant Repair Conditioner 500ml,assets/products/instant-repair-conditioner/
+13,Glow Detoxic Skin Rehydrating Cleanser,rehydrating-cleanser,skin-care,500ml,495,ARG-CAT-REHYDRATING-CLEANSER,ARG-GD-REHYDRATING-CLEANSER-500,Rehydrating cleanser,assets/products/rehydrating-cleanser/
+14,Instant Repair Shampoo — 500ml,instant-repair-shampoo-500,hair-care,500ml,350,ARG-CAT-INSTANT-REPAIR-SHAMPOO-500,ARG-INSTANT-REPAIR-RESTORATIVE-SHAMPOO-500,Instant Repair Shampoo (500ml),assets/products/instant-repair-shampoo-500/
+15,Glow Detoxic Rejuvenating Face Pack,glow-face-pack,skin-care,200g,645,ARG-CAT-GLOW-FACE-PACK,ARG-GD-REJUVENATING-FACE-PACK-STD,Facepack (Ai),assets/products/glow-face-pack/
+16,Glow Detoxic Skin Illuminating Gel,glow-illuminating-gel,skin-care,200g,695,ARG-CAT-GLOW-ILLUMINATING-GEL,ARG-GD-SKIN-ILLUMINATING-GEL-STD,Skin Illuminating Gel (Ai),assets/products/glow-illuminating-gel/
+17,Ultra Shine Hair Serum,hair-serum,hair-care,100ml,425,ARG-CAT-HAIR-SERUM,ARG-ULTRA-SHINE-HAIR-SERUM-STD,Hair Serum (Ai),assets/products/hair-serum/
+18,Instant Repair Shampoo + Conditioner Duo,instant-repair-duo-1l,hair-care,1L shampoo + 1L conditioner,,ARG-CAT-INSTANT-REPAIR-DUO-1L,ARG-INSTANT-REPAIR-SHAMPOO-CONDITIONER-SET-1L-SET,Shampoo & Conditioner(1L),assets/products/instant-repair-duo-1l/
+19,Multani Mitti,multani-mitti,skin-care,80g,50,ARG-CAT-MULTANI-MITTI,ARG-MULTANI-MITTI-80,Multani mitti,assets/products/multani-mitti/
+20,Lavang Extract Anti-Bacterial Cleanser,lavang-cleanser,skin-care,200ml,200,ARG-CAT-LAVANG-CLEANSER,ARG-ANTI-BACTERIAL-CLEANSER-200,Anti Backterial,assets/products/lavang-cleanser/
+21,Aloe Vera Gel,aloe-vera-gel,skin-care,200ml,200,ARG-CAT-ALOE-VERA-GEL,ARG-ALOE-VERA-GEL-200,Aloe vera Gel,assets/products/aloe-vera-gel/
+22,Body Moisturizer,body-moisturiser,body-care,200ml,,ARG-CAT-BODY-MOISTURISER,ARG-BODY-MOISTURIZER-200,Body moisturiser,assets/products/body-moisturiser/
+23,Kera Rescue Hair Masque — 350g,kera-rescue-hair-masque-350,hair-care,350g,,ARG-CAT-KERA-RESCUE-HAIR-MASQUE-350,ARG-KERA-RESCUE-HAIR-MASQUE-350,Hair Mask 350g,assets/products/kera-rescue-hair-masque-350/
+24,Kera Rescue Hair Masque — 800g,kera-rescue-hair-masque-800,hair-care,800g,,ARG-CAT-KERA-RESCUE-HAIR-MASQUE-800,ARG-KERA-RESCUE-HAIR-MASQUE-800,Hair Mask 800g,assets/products/kera-rescue-hair-masque-800/
+25,Kera Rescue Keratin Shampoo + Conditioner Duo,kera-rescue-duo,hair-care,Two-bottle set; exact volumes to confirm,,ARG-CAT-KERA-RESCUE-DUO,ARG-KERA-RESCUE-SHAMPOO-CONDITIONER-SET-1L-SET,Kera Shampoo & conditioner 1L,

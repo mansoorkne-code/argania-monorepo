@@ -1,47 +1,60 @@
 import Link from "next/link";
 import { getStorefrontAssetUrl } from "../../lib/storefront-assets";
-import styles from "./storefront-footer.module.css";
+import { NewsletterForm } from "./newsletter-form";
 
 export function StorefrontFooter() {
   return (
-    <footer className={styles.footer} id="contact">
-      <div className={`${styles.container} ${styles.footerBody}`}>
-        <div className={styles.footerIdentity}>
+    <footer className="footer" id="contact">
+      <div className="newsletter-area">
+        <div className="container">
+          <div className="newsletter-grid">
+            <div>
+              <span className="eyebrow warm">A LITTLE MORE SELF-CARE</span>
+              <h2>Good things in your inbox.</h2>
+              <p>
+                Beauty notes, new rituals, and the occasional little surprise.
+              </p>
+            </div>
+            <NewsletterForm id="footer-newsletter-email" footer />
+          </div>
+        </div>
+      </div>
+      <div className="container footer-body">
+        <div className="footer-identity">
           <Link href="/" aria-label="Argania Professional home">
             <img
               src={getStorefrontAssetUrl("assets/logo-secondary.webp")}
               alt="Argania Professional"
+              className="footer-brand-image"
             />
           </Link>
           <p>For the little moments that make you feel like yourself.</p>
-          <span className={styles.footerMotto}>
-            Nourish. Rejuvenate. Pamper.
-          </span>
+          <span className="footer-motto">Nourish. Rejuvenate. Pamper.</span>
         </div>
 
-        <nav aria-label="Explore" className={styles.footerColumn}>
-          <h2>Explore</h2>
+        <nav aria-label="Explore" className="footer-column">
+          <h4>Explore</h4>
           <Link href="/products">Shop all</Link>
           <Link href="/products?category=haircare">Haircare</Link>
           <Link href="/products?category=skincare">Skincare</Link>
-          <Link href="/products?category=body-care">Body care</Link>
+          <Link href="/products?category=bodycare">Body care</Link>
         </nav>
 
-        <nav aria-label="About Argania" className={styles.footerColumn}>
-          <h2>About Argania</h2>
+        <nav aria-label="About Argania" className="footer-column">
+          <h4>About Argania</h4>
           <Link href="/about">Our philosophy</Link>
           <a href="mailto:argania.professional@gmail.com">Contact us</a>
         </nav>
 
-        <nav aria-label="Policies and support" className={styles.footerColumn}>
-          <h2>Policies &amp; Support</h2>
+        <nav aria-label="Policies and support" className="footer-column">
+          <h4>Policies &amp; Support</h4>
           <a href="mailto:argania.professional@gmail.com">Customer support</a>
         </nav>
 
-        <div className={`${styles.footerColumn} ${styles.connect}`}>
-          <h2>Connect &amp; Collaborate</h2>
+        <div className="footer-column footer-connect">
+          <h4>Connect &amp; Collaborate</h4>
           <a
-            className={styles.socialLink}
+            className="footer-social-link"
             href="https://www.instagram.com/argania.pro/"
             target="_blank"
             rel="noopener noreferrer"
@@ -67,7 +80,7 @@ export function StorefrontFooter() {
             <span>Instagram · @argania.pro ↗</span>
           </a>
           <a
-            className={styles.b2bLink}
+            className="footer-b2b-link"
             href="mailto:argania.professional@gmail.com?subject=B2B%20%2F%20Bulk%20enquiry"
           >
             B2B / Bulk Enquiries ↗
@@ -79,7 +92,7 @@ export function StorefrontFooter() {
         </div>
       </div>
 
-      <div className={`${styles.container} ${styles.footerBottom}`}>
+      <div className="container footer-bottom">
         <span>
           © {new Date().getFullYear()} Argania Professional. A more beautiful
           everyday.
