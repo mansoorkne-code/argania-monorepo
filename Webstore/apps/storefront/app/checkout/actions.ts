@@ -3,8 +3,14 @@
 import { redirect } from "next/navigation";
 import { checkoutAddressSchema } from "@webstore/validations/checkout";
 import { getOrCreateCart } from "../../lib/cart";
-import { createRazorpayOrder, getRazorpayKeyId } from "../../lib/checkout/razorpay";
-import { getParcelWeight, getShiprocketQuote } from "../../lib/checkout/shiprocket";
+import {
+  createRazorpayOrder,
+  getRazorpayKeyId,
+} from "../../lib/checkout/razorpay";
+import {
+  getParcelWeight,
+  getShiprocketQuote,
+} from "../../lib/checkout/shiprocket";
 import { createClient } from "../../lib/supabase/server";
 import { createServiceClient } from "../../lib/supabase/service";
 
@@ -60,7 +66,9 @@ function logCheckoutEnvironment() {
     SHIPROCKET_API_EMAIL: inspectKey("SHIPROCKET_API_EMAIL"),
     SHIPROCKET_API_PASSWORD: inspectKey("SHIPROCKET_API_PASSWORD"),
     SHIPROCKET_PICKUP_PINCODE: inspectKey("SHIPROCKET_PICKUP_PINCODE"),
-    SHIPROCKET_PACKAGING_WEIGHT_KG: inspectKey("SHIPROCKET_PACKAGING_WEIGHT_KG"),
+    SHIPROCKET_PACKAGING_WEIGHT_KG: inspectKey(
+      "SHIPROCKET_PACKAGING_WEIGHT_KG",
+    ),
     SHIPROCKET_PARCEL_LENGTH_CM: inspectKey("SHIPROCKET_PARCEL_LENGTH_CM"),
     SHIPROCKET_PARCEL_BREADTH_CM: inspectKey("SHIPROCKET_PARCEL_BREADTH_CM"),
     SHIPROCKET_PARCEL_HEIGHT_CM: inspectKey("SHIPROCKET_PARCEL_HEIGHT_CM"),
@@ -69,7 +77,9 @@ function logCheckoutEnvironment() {
 
 export async function prepareCheckout(formData: FormData) {
   logCheckoutEnvironment();
-  const input = checkoutAddressSchema.safeParse(Object.fromEntries(formData.entries()));
+  const input = checkoutAddressSchema.safeParse(
+    Object.fromEntries(formData.entries()),
+  );
   if (!input.success) redirect("/checkout?error=address");
 
   const sessionClient = await createClient();
@@ -102,18 +112,22 @@ export async function prepareCheckout(formData: FormData) {
       errorCode = "cart";
       throw new Error("Cart is empty.");
     }
-    if (items.some((item) =>
-      !item.variant.is_active ||
-      item.variant.product.status !== "active" ||
-      item.variant.stock_quantity < item.quantity ||
-      item.quantity > 100
-    )) {
+    if (
+      items.some(
+        (item) =>
+          !item.variant.is_active ||
+          item.variant.product.status !== "active" ||
+          item.variant.stock_quantity < item.quantity ||
+          item.quantity > 100,
+      )
+    ) {
       errorCode = "stock";
       throw new Error("Some cart items are not available.");
     }
 
     const subtotalMinor = items.reduce(
-      (subtotal, item) => subtotal + Math.round(Number(item.variant.price) * 100) * item.quantity,
+      (subtotal, item) =>
+        subtotal + Math.round(Number(item.variant.price) * 100) * item.quantity,
       0,
     );
     const weightKg = getParcelWeight(items);
@@ -125,9 +139,9 @@ export async function prepareCheckout(formData: FormData) {
         weightKg,
         declaredValueRupees: subtotalMinor / 100,
       });
-    } catch {
+    } catch (error) {
       errorCode = "shipping";
-      throw new Error("Delivery quote failed.");
+      throw new Error("Delivery quote failed.", { cause: error });
     }
     getRazorpayKeyId();
 
@@ -166,7 +180,8 @@ export async function prepareCheckout(formData: FormData) {
       .eq("id", orderId)
       .eq("user_id", userId)
       .single();
-    if (orderError || !order) throw new Error("Saved order could not be loaded.");
+    if (orderError || !order)
+      throw new Error("Saved order could not be loaded.");
 
     const { data: savedPayment, error: paymentError } = await serviceClient
       .from("payments")
@@ -190,7 +205,8 @@ export async function prepareCheckout(formData: FormData) {
         .eq("order_id", orderId)
         .eq("provider", "razorpay")
         .is("provider_order_id", null);
-      if (updatePaymentError) throw new Error("Payment reference could not be saved.");
+      if (updatePaymentError)
+        throw new Error("Payment reference could not be saved.");
     }
   } catch (error) {
     const detail =
@@ -215,7 +231,9 @@ export async function prepareCheckout(formData: FormData) {
     if (orderId) {
       try {
         const serviceClient = createServiceClient();
-        await serviceClient.rpc("cancel_checkout_order", { p_order_id: orderId });
+        await serviceClient.rpc("cancel_checkout_order", {
+          p_order_id: orderId,
+        });
       } catch {
         // Expiry cleanup in the checkout RPC releases a pending reservation.
       }
@@ -224,4 +242,66 @@ export async function prepareCheckout(formData: FormData) {
   }
 
   redirect(`/checkout/pay?order=${encodeURIComponent(orderId ?? "")}`);
+}
+
+export async function quoteDelivery(postalCode: string) {
+  const input = checkoutAddressSchema.shape.postalCode.safeParse(postalCode);
+  if (!input.success)
+    return {
+      ok: false as const,
+      error: "Enter a six-digit delivery PIN code.",
+    };
+  try {
+    const supabase = await createClient();
+    const { data: claims } = await supabase.auth.getClaims();
+    const userId = claims?.claims?.sub;
+    if (typeof userId !== "string")
+      return {
+        ok: false as const,
+        error: "Please sign in again to check delivery.",
+      };
+    const cartId = await getOrCreateCart(supabase, userId);
+    const service = createServiceClient();
+    const { data, error } = await service
+      .from("cart_items")
+      .select("quantity, variant:product_variants!inner(price,weight_kg)")
+      .eq("cart_id", cartId);
+    if (error)
+      throw new Error("Cart could not be loaded for delivery pricing.");
+    const items = (data ?? []) as unknown as {
+      quantity: number;
+      variant: { price: number | string; weight_kg: number | string };
+    }[];
+    if (!items.length)
+      return {
+        ok: false as const,
+        error: "Add an item to your bag to check delivery.",
+      };
+    const amountMinor = items.reduce(
+      (total, item) =>
+        total + Math.round(Number(item.variant.price) * 100) * item.quantity,
+      0,
+    );
+    const quote = await getShiprocketQuote({
+      deliveryPostalCode: input.data,
+      weightKg: getParcelWeight(items),
+      declaredValueRupees: amountMinor / 100,
+    });
+    return {
+      ok: true as const,
+      amount: quote.amount,
+      courierName: quote.courierName,
+      estimatedDays: quote.estimatedDays,
+    };
+  } catch (error) {
+    console.error("[checkout] Delivery preview failed", {
+      message:
+        error instanceof Error ? error.message : "Unknown delivery error",
+    });
+    return {
+      ok: false as const,
+      error:
+        "Delivery pricing is temporarily unavailable for this PIN code. Please try again.",
+    };
+  }
 }

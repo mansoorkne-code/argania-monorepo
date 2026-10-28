@@ -23,7 +23,7 @@ interface ShiprocketCourier {
 function getCourierRate(courier: ShiprocketCourier) {
   const rate = courier.rate;
   const nestedRate =
-    rate && typeof rate === "object" ? rate.rate ?? rate.total : rate;
+    rate && typeof rate === "object" ? (rate.rate ?? rate.total) : rate;
   return Number(nestedRate ?? courier.freight_charge);
 }
 
@@ -33,18 +33,31 @@ function requiredEnv(name: string) {
   return value;
 }
 
+// Edge runtimes do not supply Node's default User-Agent. Identify the API client
+// explicitly so upstream request filtering can recognize a normal JSON API call.
+const apiHeaders = {
+  accept: "application/json",
+  "user-agent": "ArganiaStorefront/1.0 (+https://arganiaprofessional.com)",
+};
+
 async function shiprocketToken() {
-  const response = await fetch("https://apiv2.shiprocket.in/v1/external/auth/login", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      email: requiredEnv("SHIPROCKET_API_EMAIL"),
-      password: requiredEnv("SHIPROCKET_API_PASSWORD"),
-    }),
-    cache: "no-store",
-    signal: AbortSignal.timeout(12_000),
-  });
-  if (!response.ok) throw new Error("Shiprocket authentication failed.");
+  const response = await fetch(
+    "https://apiv2.shiprocket.in/v1/external/auth/login",
+    {
+      method: "POST",
+      headers: { ...apiHeaders, "content-type": "application/json" },
+      body: JSON.stringify({
+        email: requiredEnv("SHIPROCKET_API_EMAIL"),
+        password: requiredEnv("SHIPROCKET_API_PASSWORD"),
+      }),
+      cache: "no-store",
+      signal: AbortSignal.timeout(12_000),
+    },
+  );
+  if (!response.ok)
+    throw new Error(
+      `Shiprocket authentication failed (HTTP ${response.status}).`,
+    );
 
   const body = (await response.json()) as { token?: string };
   if (!body.token) throw new Error("Shiprocket did not return an API token.");
@@ -71,32 +84,48 @@ export async function getShiprocketQuote(input: {
   const response = await fetch(
     `https://apiv2.shiprocket.in/v1/external/courier/serviceability/?${params}`,
     {
-      headers: { authorization: `Bearer ${token}` },
+      headers: { ...apiHeaders, authorization: `Bearer ${token}` },
       cache: "no-store",
       signal: AbortSignal.timeout(12_000),
     },
   );
-  if (!response.ok) throw new Error("Shiprocket could not quote delivery for this address.");
+  if (!response.ok)
+    throw new Error(
+      `Shiprocket delivery quote failed (HTTP ${response.status}).`,
+    );
 
   const body = (await response.json()) as {
     data?: { available_courier_companies?: ShiprocketCourier[] };
   };
-  const candidates = (body.data?.available_courier_companies ?? [])
-    .filter((courier) => Number(courier.blocked ?? 0) === 0 && courier.courier_company_id)
+  const courierRows = body.data?.available_courier_companies;
+  if (courierRows !== undefined && !Array.isArray(courierRows)) {
+    throw new Error("Shiprocket returned an invalid courier list.");
+  }
+  const candidates = (courierRows ?? [])
+    .filter(
+      (courier) =>
+        Number(courier.blocked ?? 0) === 0 && courier.courier_company_id,
+    )
     .map((courier) => ({
       courier,
       amount: getCourierRate(courier),
     }))
-    .filter((candidate) => Number.isFinite(candidate.amount) && candidate.amount >= 0)
+    .filter(
+      (candidate) => Number.isFinite(candidate.amount) && candidate.amount >= 0,
+    )
     .sort((a, b) => a.amount - b.amount);
 
   const cheapest = candidates[0];
-  if (!cheapest) throw new Error("Shiprocket does not serve this delivery postcode.");
+  if (!cheapest)
+    throw new Error(
+      `Shiprocket returned no eligible delivery rate (${courierRows?.length ?? 0} couriers).`,
+    );
 
   return {
     amount: Math.round(cheapest.amount * 100) / 100,
     reference:
-      cheapest.courier.rate && typeof cheapest.courier.rate === "object" &&
+      cheapest.courier.rate &&
+      typeof cheapest.courier.rate === "object" &&
       cheapest.courier.rate.id
         ? String(cheapest.courier.rate.id)
         : null,
@@ -108,16 +137,21 @@ export async function getShiprocketQuote(input: {
   };
 }
 
-export function getParcelWeight(variantRows: readonly {
-  quantity: number;
-  variant: { weight_kg: number | string };
-}[]) {
+export function getParcelWeight(
+  variantRows: readonly {
+    quantity: number;
+    variant: { weight_kg: number | string };
+  }[],
+) {
   const productWeight = variantRows.reduce(
     (total, row) => total + Number(row.variant.weight_kg) * row.quantity,
     0,
   );
-  const packagingWeight = Number(process.env.SHIPROCKET_PACKAGING_WEIGHT_KG || "0.100");
+  const packagingWeight = Number(
+    process.env.SHIPROCKET_PACKAGING_WEIGHT_KG || "0.100",
+  );
   const total = productWeight + packagingWeight;
-  if (!Number.isFinite(total) || total <= 0) throw new Error("Parcel weight is invalid.");
+  if (!Number.isFinite(total) || total <= 0)
+    throw new Error("Parcel weight is invalid.");
   return Math.max(0.5, total);
 }

@@ -75,3 +75,19 @@ build, TypeScript, ESLint, local route requests, and browser interaction.
 Authenticated checkout, OAuth completion, payment settlement, and shipping
 creation still require end-to-end testing with the appropriate test accounts
 and service configuration.
+
+## Delivery-price checks
+
+Checkout customers can check their delivery charge using a six-digit PIN code
+before submitting the full address. The server calculates parcel weight and value
+from the signed-in customer's current cart; it does not accept prices from the
+browser. Order preparation obtains a fresh quote before saving the payable total.
+Shiprocket requests send explicit JSON headers and identify the storefront API
+client, including when running on Cloudflare Workers. Provider HTTP errors stay
+in server diagnostics; credentials and full delivery addresses are not logged.
+
+Run the storefront regression suite with Node.js 24 or newer:
+
+```sh
+node --test apps/storefront/tests/*.test.mjs
+```
