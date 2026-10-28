@@ -1,118 +1,297 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getStorefrontAssetUrl } from "../../lib/storefront-assets";
 import styles from "./about.module.css";
 
 export const metadata: Metadata = {
-  title: "About Argania Professional",
+  title: "Our Story | Argania Professional",
   description:
-    "The story and values behind Argania Professional's everyday skincare and haircare rituals.",
+    "Meet Faiza Mansoor, co-founder of Argania Professional, and discover the personal journey behind our haircare and skincare rituals.",
 };
-
-const values = [
-  {
-    number: "01",
-    title: "Nourish.",
-    description:
-      "Make space for ingredients and routines that help your hair and skin feel well cared for.",
-  },
-  {
-    number: "02",
-    title: "Rejuvenate.",
-    description:
-      "Bring a little freshness, energy and intention to the moments you give yourself.",
-  },
-  {
-    number: "03",
-    title: "Pamper.",
-    description:
-      "Find small everyday luxuries without making beauty feel out of reach.",
-  },
-];
 
 export default function AboutPage() {
   return (
-    <main className={styles.page}>
-      <header className={styles.hero}>
-        <div className={styles.container}>
-          <span className={styles.eyebrow}>Nourish · Rejuvenate · Pamper</span>
-          <h1>The story behind the ritual.</h1>
-          <p>A little more care, a little more everyday beauty.</p>
-        </div>
-      </header>
-
-      <section className={`${styles.container} ${styles.aboutTop}`}>
-        <div className={styles.copy}>
-          <span className={styles.eyebrow}>Welcome to Argania</span>
-          <h2>
-            Beauty that feels
+    <main className={styles["page"]}>
+      <section
+        className={styles["founder-hero"]}
+        aria-labelledby="founder-hero-heading"
+      >
+        <div
+          className={[styles["container"], styles["founder-hero-content"]].join(
+            " ",
+          )}
+        >
+          <span className={styles["eyebrow"]}>
+            OUR STORY   /   ARGANIA PROFESSIONAL
+          </span>
+          <h1 id="founder-hero-heading">
+            Every ritual begins
             <br />
-            <em>like self-care.</em>
-          </h2>
+            with <em>a story.</em>
+          </h1>
           <p>
-            Argania Professional was created around a simple belief: caring for
-            yourself should be more than another item on your to-do list. It
-            should be a nourishing pause in your everyday life.
+            More than a personal care brand, Argania began with one woman&apos;s
+            search for a better way to care for her hair.
           </p>
-          <p>
-            Inspired by the beauty of nature and the comforting qualities of
-            argan oil, our skincare and haircare bring thoughtfully selected
-            ingredients and everyday practicality together.
-          </p>
-          <Link className={styles.button} href="/products">
-            Discover our collection ↗
-          </Link>
+          <a className={styles["founder-scroll-link"]} href="#founder-story">
+            Meet the person behind Argania <span aria-hidden="true">↓</span>
+          </a>
         </div>
-        <div className={styles.art}>
-          <img
-            src={getStorefrontAssetUrl("assets/day-lifestyle.webp")}
-            alt="Argania day cream lifestyle"
-            loading="lazy"
-          />
-        </div>
+        <span className={styles["founder-hero-ornament"]} aria-hidden="true">
+          A
+        </span>
       </section>
 
-      <section aria-label="Our values" className={styles.valuesBand}>
-        <div className={`${styles.container} ${styles.valuesGrid}`}>
-          {values.map((value) => (
-            <article key={value.number}>
-              <span className={styles.valueNumber}>{value.number}</span>
-              <h3>{value.title}</h3>
-              <p>{value.description}</p>
-            </article>
-          ))}
+      <section
+        id="founder-story"
+        className={[styles["container"], styles["founder-profile"]].join(" ")}
+        aria-labelledby="founder-name"
+      >
+        <figure className={styles["founder-portrait"]}>
+          <div className={styles["founder-photo-wrap"]}>
+            <img
+              src="/about/faiza-mansoor.jpg"
+              alt="Faiza Mansoor, co-founder of Argania Professional"
+              width="558"
+              height="814"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+          <figcaption>
+            <strong>Faiza Mansoor</strong>
+            <span>Co-founder, Argania Professional</span>
+          </figcaption>
+        </figure>
+        <div className={styles["founder-profile-copy"]}>
+          <span className={styles["eyebrow"]}>
+            MEET THE PERSON BEHIND THE BRAND
+          </span>
+          <h2 id="founder-name">
+            Meet Faiza.
+            <br />
+            <em>The heart behind Argania.</em>
+          </h2>
+          <p className={styles["founder-lead"]}>
+            Argania isn&apos;t just about products. It&apos;s about a personal
+            journey of curiosity, resilience and care.
+          </p>
+          <p>
+            Like many people trying to navigate haircare, Faiza Mansoor
+            struggled to find products that felt right for her. While dealing
+            with hair thinning concerns and questioning conventional cosmetic
+            formulas, she began exploring the possibilities of argan oil.
+          </p>
+          <p>
+            What started as a personal discovery grew into a deeper interest in
+            haircare. Faiza immersed herself in research and experimented with
+            homemade formulations, learning through her own experience and
+            sharing those creations with people around her.
+          </p>
+          <p>
+            The encouraging response from her community gave her the confidence
+            to take the next step. She worked with experts to develop her early
+            ideas into a professional personal-care range rooted in her
+            commitment to quality, transparency and the experience of self-care.
+          </p>
+          <div className={styles["founder-profile-rule"]}>
+            <span>FROM PERSONAL DISCOVERY</span>
+            <i aria-hidden="true"></i>
+            <span>TO SHARED CARE</span>
+          </div>
         </div>
       </section>
 
       <section
-        className={`${styles.container} ${styles.aboutTop} ${styles.promise}`}
+        className={styles["founder-story-band"]}
+        aria-label="The origins of Argania"
       >
-        <div className={`${styles.art} ${styles.promiseArt}`}>
-          <img
-            src={getStorefrontAssetUrl("assets/glow-bathroom.webp")}
-            alt="Argania Glow Detoxic serum in a bathroom ritual"
-            loading="lazy"
-          />
+        <div
+          className={[
+            styles["container"],
+            styles["founder-story-band-inner"],
+          ].join(" ")}
+        >
+          <span className={styles["eyebrow"]}>HOW IT ALL BEGAN</span>
+          <p>
+            &quot;What started as a personal journey grew into something she
+            wanted to share.&quot;
+          </p>
+          <span className={styles["founder-story-band-note"]}>
+            A brand built around the belief that beauty should feel personal.
+          </span>
         </div>
-        <div className={styles.copy}>
-          <span className={styles.eyebrow}>Our promise</span>
-          <h2>
-            Feel-good beauty,
+      </section>
+
+      <section
+        className={[styles["container"], styles["founder-milestones"]].join(
+          " ",
+        )}
+        aria-labelledby="founder-journey-title"
+      >
+        <div className={styles["founder-milestones-heading"]}>
+          <div>
+            <span className={styles["eyebrow"]}>THE JOURNEY</span>
+            <h2 id="founder-journey-title">
+              From a question
+              <br />
+              to <em>Argania.</em>
+            </h2>
+          </div>
+          <p>Four chapters that shaped the brand you know today.</p>
+        </div>
+        <div className={styles["founder-milestone-grid"]}>
+          <article className={styles["founder-milestone"]}>
+            <span className={styles["founder-milestone-number"]}>01</span>
+            <h3>A personal search</h3>
+            <p>
+              Her own haircare concerns sparked a desire to understand
+              ingredients and explore different approaches to everyday care.
+            </p>
+          </article>
+          <article className={styles["founder-milestone"]}>
+            <span className={styles["founder-milestone-number"]}>02</span>
+            <h3>Research &amp; discovery</h3>
+            <p>
+              Inspired by argan oil, Faiza researched haircare and began
+              experimenting with homemade formulations.
+            </p>
+          </article>
+          <article className={styles["founder-milestone"]}>
+            <span className={styles["founder-milestone-number"]}>03</span>
+            <h3>Shared with care</h3>
+            <p>
+              She shared her creations with people around her, and their
+              encouragement helped the idea grow beyond her own routine.
+            </p>
+          </article>
+          <article className={styles["founder-milestone"]}>
+            <span className={styles["founder-milestone-number"]}>04</span>
+            <h3>Argania is born</h3>
+            <p>
+              Collaborating with experts, she took those early ideas forward
+              into a professional haircare and skincare range.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        className={styles["founder-quote"]}
+        aria-labelledby="founder-quote-title"
+      >
+        <div
+          className={[styles["container"], styles["founder-quote-layout"]].join(
+            " ",
+          )}
+        >
+          <div className={styles["founder-quote-left"]}>
+            <span className={styles["eyebrow"]}>A NOTE FROM OUR FOUNDER</span>
+            <div className={styles["founder-quote-mark"]} aria-hidden="true">
+              “
+            </div>
+          </div>
+          <div className={styles["founder-quote-content"]}>
+            <h2 id="founder-quote-title">
+              Welcome to ARGANIA, where every product is infused with the
+              essence of human connection and the promise of radiant
+              transformation.
+            </h2>
+            <div className={styles["founder-signoff"]}>
+              <img
+                src="/about/faiza-signature.png"
+                alt="Faiza's handwritten signature"
+                width="242"
+                height="144"
+                loading="eager"
+              />
+              <div>
+                <strong>Faiza Mansoor</strong>
+                <span>Co-founder, Argania Professional</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className={styles["founder-values"]}
+        aria-labelledby="founder-values-title"
+      >
+        <div className={styles["container"]}>
+          <div className={styles["founder-values-intro"]}>
+            <span className={styles["eyebrow"]}>WHAT WE BELIEVE</span>
+            <h2 id="founder-values-title">
+              Nourish. Rejuvenate. <em>Pamper.</em>
+            </h2>
+            <p>
+              The spirit behind Argania&apos;s approach to everyday haircare and
+              skincare.
+            </p>
+          </div>
+          <div className={styles["founder-values-grid"]}>
+            <div className={styles["founder-value"]}>
+              <span>01 / NOURISH</span>
+              <h3>Care with intention.</h3>
+              <p>
+                Everyday routines built around the small, meaningful ways we
+                care for ourselves.
+              </p>
+            </div>
+            <div className={styles["founder-value"]}>
+              <span>02 / REJUVENATE</span>
+              <h3>Beauty that feels good.</h3>
+              <p>
+                Make room for freshness, softness and moments of renewal in your
+                daily ritual.
+              </p>
+            </div>
+            <div className={styles["founder-value"]}>
+              <span>03 / PAMPER</span>
+              <h3>Everyday indulgence.</h3>
+              <p>
+                Thoughtful personal care that feels special without feeling out
+                of reach.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className={[styles["container"], styles["founder-last"]].join(" ")}
+        aria-labelledby="founder-last-heading"
+      >
+        <div className={styles["founder-last-copy"]}>
+          <span className={styles["eyebrow"]}>BECOME PART OF OUR STORY</span>
+          <h2 id="founder-last-heading">
+            Your ritual.
             <br />
-            <em>for real life.</em>
+            <em>Our reason.</em>
           </h2>
           <p>
-            We want Argania to be a brand you reach for instinctively:
-            approachable, considered and made for the simple pleasure of taking
-            care of yourself.
+            Discover the haircare and skincare essentials inspired by
+            Faiza&apos;s journey and Argania&apos;s belief in approachable,
+            personal self-care.
           </p>
-          <p>
-            From sulfate-free haircare to daily skin essentials, our mission is
-            to make quality personal care more accessible.
-          </p>
-          <Link className={styles.textLink} href="/#contact">
-            Get to know us ↗
-          </Link>
+          <div className={styles["founder-last-actions"]}>
+            <Link href="/products" className={styles["btn"]}>
+              Explore our collection <span aria-hidden="true">↗</span>
+            </Link>
+            <a href="#contact" className={styles["text-link"]}>
+              Get in touch ↗
+            </a>
+          </div>
+        </div>
+        <div className={styles["founder-last-photo"]}>
+          <div className={styles["founder-last-art"]} aria-hidden="true">
+            <span className={styles["founder-last-art-logo"]}>A</span>
+            <span className={styles["founder-last-art-wordmark"]}>
+              ARGANIA<small>PROFESSIONAL</small>
+            </span>
+            <span className={styles["founder-last-art-strap"]}>
+              NOURISH   ·   REJUVENATE   ·   PAMPER
+            </span>
+          </div>
         </div>
       </section>
     </main>
